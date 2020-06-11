@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="./css/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="./css/style.css">
@@ -46,12 +46,18 @@
             </header>
         </div>
         
-        <div class="row lancamento screens">
+        <div class="row lancamento screens ">
             <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-6" style="border-right: 2px solid grey;">
-                        <span class="navbar-brand" href="#parking" style="color: green;">Vagas Disponíveis:<span class="badge badge-light">17</span></span>
-                        <span class="navbar-brand" href="#parking" style="color: red;">Vagas Ocupadas:<span class="badge badge-light">9</span></span>
+                    <div class="col-sm-6" style="border-right: 2px solid grey;">
+                        <div class="form-group row">
+                            <span class="navbar-brand" href="#parking" style="color: green;">Vagas Disponíveis:<span class="badge badge-light" id="freeAmount"></span></span>
+                            <span class="navbar-brand" href="#parking" style="color: red;">Vagas Ocupadas:<span class="badge badge-light" id="busyAmount"></span></span>
+                            <select class="select-parking">
+                              <option>Vagas</option>
+                              <option>Pendências</option>
+                            </select>
+                        </div>
                         <div class="table-wrapper-scroll-y my-custom-scrollbar">
                             <table class="table table-hover table-bordered">
                                 <thead class="thead-dark">
@@ -70,233 +76,52 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            Santana
-                                        </td>
-                                        <td>
-                                            BJQ-4579
-                                        </td>
-                                        <td>
-                                            01/04/2012
-                                        </td>
-                                    </tr>
-                                    <tr class="table-active">
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            01/04/2012
-                                        </td>
-                                        <td>
-                                            Approved
-                                        </td>
-                                    </tr>
-                                    <tr class="table-success">
-                                        <td>
-                                            2
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            02/04/2012
-                                        </td>
-                                        <td>
-                                            Declined
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                            03/04/2012
-                                        </td>
-                                        <td>
-                                            Pending
-                                        </td>
-                                    </tr>
-                                    <tr class="table-danger">
-                                        <td>
-                                            4
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-                                        <td>
-                                                04/04/2012
-                                            </td>
-                                            <td>
-                                                Call in to confirm
-                                            </td>
-                                        </tr>
-                                </tbody>
+                                <tbody id="table_parking_space"></tbody>
                             </table>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <form role="form">
-                            <div class="form-group">
-                                 
-                                <label for="licence_plate">
-                                    Placa do Veiculo
-                                </label>
-                                <input type="text" class="form-control" id="licence_plate" maxlength="7">
-                            </div>
-                            <div class="form-group">
-                                 
-                                <label for="model">
-                                    Modelo
-                                </label>
-                                <input type="text" class="form-control" id="model">
-                            </div>
-                           
-                            <div class="form-group">
-                                 
-                                <label for="name">
-                                    Proprietário <span class="badge badge-warning">0</span>
-                                </label>
-                                <input type="text" class="form-control" id="name">
-                            </div>
-
-                            <div class="form-group">
-                                 
-                                <label for="phone">
-                                    Telefone
-                                </label>
-                                <input type="tel" class="form-control" id="phone">
-                            </div>
+                        <div class="hide-screen" id="view_form_parking">
+                            <form role="form overflow-auto force-overflow">
+                                <div class="form-group">
+                                    
+                                    <label for="license_plate">
+                                        Placa do Veiculo
+                                    </label>
+                                    <input type="text" class="form-control" id="license_plate" maxlength="7">
+                                </div>
+                                <div class="form-group">
+                                    
+                                    <label for="model">
+                                        Modelo
+                                    </label>
+                                    <input type="text" class="form-control" id="model" maxlength="255">
+                                </div>
                             
-                            <button type="button" class="btn btn-primary">
-                                Salvar
-                            </button>
-                            <button type="button" class="btn btn-danger">
-                                Cancelar
-                            </button>
-                        </form>
+                                <div class="form-group">
+                                    
+                                    <label for="name">
+                                        Proprietário <span class="badge badge-warning">0</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="name" maxlength="255">
+                                </div>
+
+                                <div class="form-group">
+                                    
+                                    <label for="phone">
+                                        Telefone
+                                    </label>
+                                    <input type="tel" class="form-control" id="phone" maxlength="11">
+                                </div>
+                                
+                                <button type="button" class="btn btn-primary">
+                                    Salvar
+                                </button>
+                                <button type="button" class="btn btn-danger" id="cancelInsertSpot">
+                                    Cancelar
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -308,5 +133,9 @@
             </div>
         </div> -->
     </div>
+
+    <script src="./js/lib.js"></script>
+    <script src="./js/obj/objConfig.js"></script>
+    <script src="./js/parking.js"></script>
 </body>
 </html>

@@ -20,15 +20,28 @@ header {
 }
 
 .my-custom-scrollbar {
-    position: relative;
-    height: 345px;
+    max-height: 400px;
     overflow: auto;
 }
 
 .table-wrapper-scroll-y {
-display: block;
+    display: block;
 }
 
 .table td:hover {
     cursor: pointer;
+}
+
+.parking-space {
+    width: 70px;
+    height: 70px;
+}
+
+.select-parking {
+    border-radius: 7px;
+    padding: 5px;
+}
+
+.hide-screen {
+    display: none;
 }
