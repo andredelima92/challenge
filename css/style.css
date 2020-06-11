@@ -1,0 +1,34 @@
+html {
+    height: 100%;
+}
+
+body {
+    background-color: rgb(53, 49, 49);
+    height: 100%;
+}
+
+header {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.screens {
+    height: 500px;
+    background-color: rgb(122, 121, 121);
+    padding: 15px;
+    box-shadow: 1px 2px 5px 3px rgb(122, 121, 121);
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 345px;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+display: block;
+}
+
+.table td:hover {
+    cursor: pointer;
+}
