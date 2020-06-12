@@ -46,6 +46,17 @@ class trafficController extends controller {
     }
 
     /**
+     * Metodo retorna o traffic atual na memoria completo do banco
+     */
+    public function getTraffic()
+    {
+        return sql::select(
+            "SELECT * FROM traffics WHERE id_traffic = :id",
+            ['id' => $this->id]
+        )[0];
+    }
+
+    /**
      * Verifica se a vaga esta disponivel
      */
     public function spotIsFree($spot)

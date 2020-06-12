@@ -64,8 +64,6 @@ class clientController extends controller {
             lib::$return = ['status' => false, 'err' => 'Ocorreu um erro ao inserir o cliente'];
             return false;
         }
-
-        $this->id = sql::getLastInsertId();
         
         return true;
     }

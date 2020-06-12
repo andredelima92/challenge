@@ -49,7 +49,7 @@ let lib = () => {
         obj.open(params.type, `http://127.0.0.1/challenge/php/query.php?${url}`, true);
         
         obj.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
-        obj.send(url);  
+        obj.send('data=' + JSON.stringify(params));  
 
         obj.onreadystatechange = () => {
             if (obj.readyState == 4 && obj.status == 200) {

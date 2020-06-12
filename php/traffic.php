@@ -35,7 +35,7 @@ class traffic {
         if ($client->insertOrUpdate() === false) {
             return false;
         }
-
+        
         $vehicle->setClient($client->getId());
         
         if ($vehicle->insertOrUpdate() === false) {
@@ -44,6 +44,13 @@ class traffic {
         
         $traffic->setVehicle($vehicle->getId());
         
-        return $traffic->insertOrUpdate();
+        $result = $traffic->insertOrUpdate();
+        
+        if ($result === false) return false;
+
+        return lib::$return = [
+            'status' => true, 
+            'traffic' => $traffic->getTraffic()
+        ];
     }
 }

@@ -8,7 +8,13 @@ class controller {
     public function insertOrUpdate()
     {
         if ($this->id === null) {
-            return $this->insert();
+            $result = $this->insert();
+            
+            $lastId = sql::getLastInsertId();
+            
+            if ($lastId) $this->id = $lastId;
+            
+            return $result;
         }
     }
 

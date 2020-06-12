@@ -1,6 +1,6 @@
-const parking = () => {
+const traffic = () => {
     const that = {}
-    let traffic = null
+    that.traffics = []
 
     that.updateParkingAmounts = () => {
         z('freeAmount').textContent = config.getParkingSpace()
@@ -17,6 +17,7 @@ const parking = () => {
         const spot = e.target.parentNode.getAttribute('formspot')
         that.changeColorSpot(spot)
         
+        //Elimino a cor ocupada da vaga anterior
         config.data.traffic.id && that.changeColorSpot(config.data.traffic.id)
 
         config.data.traffic.id = spot
@@ -25,25 +26,44 @@ const parking = () => {
         z('form_parking_license_plate').focus()
     }
 
+    that.createLine = (traffic = {}) => {        
+        const tr = document.createElement('tr')
+        
+        if (traffic.entrance) tr.setAttribute('class', 'table-danger')
+        else tr.setAttribute('class', 'table-danger')
+        
+        tr.setAttribute('formspot', traffic.parking_spot)
+        
+        const spot = document.createElement('td')
+        spot.textContent =  traffic.parking_spot 
+        tr.append(spot)
+
+        const model = document.createElement('td')
+        traffic.model ? model.textContent = traffic.model : model.textContent = ''
+        tr.append(model)
+
+        const plate = document.createElement('td')
+        traffic.plate ? plate.textContent = traffic.plate : plate.textContent = ''
+        tr.append(plate)
+
+        const entrance = document.createElement('td')
+        traffic.entrance ? entrance.textContent = traffic.entrance : entrance.textContent = ''
+        tr.append(entrance)
+        
+        return tr
+    }
+
     that.createParkingSpaces = () => {
         const spots = config.getParkingSpace()
-        const doc = z('table_parking')
-
-        let html = ''
+        const table = z('table_parking')
         
         for (let i = 0; i < spots; i++) {
-            html += `<tr class="table-success" formspot="${i + 1}">
-                        <td>${i + 1}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                     </tr>
-            `
+            const tr = that.createLine({parking_spot: i + 1})
+            table.append(tr)
+            
         }
 
-        doc.innerHTML = html
-
-        const list = document.querySelectorAll('#table_parking tr[formspot]')
+        const list = table.childNodes
         for (let i = 0; i < spots; i++) {
             list[i].addEventListener('click', that.fillSpot)
         }
@@ -55,7 +75,16 @@ const parking = () => {
         config.data.clear('traffic')
     }
 
+    that.updateTrafficLine = (traffic) => {
+        const line = document.querySelector(`tr[formspot="${traffic.parking_space}"]`)
+        line.remove()
+
+
+    }
+
     that.newTraffic = () => {
+        const spot = config.data.traffic.id
+
         let data = {
             vehicle: {
                 license_plate: z('form_parking_license_plate').value.trim(),
@@ -66,21 +95,20 @@ const parking = () => {
                 phone: z('form_parking_phone').value.trim()
             },
             traffic: {
-                parking_space: config.data.traffic.id
+                parking_space: spot
             }
         }
 
-        lib.ajax({
-            s: 'traffic',
-            a: 'new',
-            type: 'GET',
-            data: data
-        }, (data) => {
-            if (data.status === false) {
-                return alert(data.err)
+        if (that.traffics[spot] === undefined) {
+            that.traffics[spot] = new objTraffic({parking_spot: spot})
+        }
+        
+        that.traffics[spot].insert(data, (response) => {
+            if (response.status === false) {
+                return alert(response.err)
             }
-
-            alert('registro incluido com sucesso')
+            
+            that.updateTrafficLine(that.traffics[spot])
         })
     }
 
@@ -98,10 +126,10 @@ const parking = () => {
         return that
     }
 
-    that.init()
+    return that.init()
 }
 
 loadMananger(() => {
-    config = new objConfig()
-    parking()
+    config = new objConfig
+    p = traffic()
 })

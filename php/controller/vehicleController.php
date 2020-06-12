@@ -57,6 +57,14 @@ class vehicleController extends controller {
 
         return true;
     }
+
+    private function setUpdatedId()
+    {
+        $this->id = sql::select(
+            "SELECT id_vehicle FROM vehicles WHERE license_plate = :license_plate",
+            ['license_plate' => $this->license_plate]
+        )[0]['id_vehicle'];
+    }
     
     /**
      * Metodo responsavel por cadastrar um novo cliente
@@ -77,15 +85,10 @@ class vehicleController extends controller {
                 return false;
             }
             
-            $this->id = sql::select(
-                "SELECT id_vehicle FROM vehicles WHERE license_plate = :license_plate",
-                ['license_plate' => $this->license_plate]
-            )[0]['id_vehicle'];
+            $this->setUpdatedId();
             
             return true;
         }
-
-        $this->id = sql::getLastInsertId();
         
         return true;
     }

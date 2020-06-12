@@ -44,6 +44,7 @@ class lib
      */
     private function getUserData()
     {   
+        
     	if ($_POST) {
     		return $_POST['data'];
         } 
