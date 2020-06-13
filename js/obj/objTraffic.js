@@ -3,6 +3,7 @@ const objTraffic = function (traffic)  {
     
     that.id_traffic = traffic.id ? traffic.id_traffic : null
     that.id_vehicle = traffic.id_vehicle ? traffic.id_vehicle : null
+    that.id_client = traffic.id_client ? traffic.id_client : null
     that.entrance = traffic.entrance ? traffic.entrance : null
     that.departure = traffic.departure ? traffic.departure : null
     that.stay_time = traffic.stay_time ? traffic.stay_time : null

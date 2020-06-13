@@ -101,9 +101,14 @@
                                 <div class="form-group">
                                     
                                     <label for="name">
-                                        Proprietário <span class="badge badge-warning">0</span>
+                                        Proprietário <span class="badge badge-success" id="form_amount_parking">0</span>
                                     </label>
-                                    <input type="text" class="form-control" id="form_parking_name" maxlength="255">
+                                    <input type="text" class="form-control" id="form_parking_name" maxlength="255" list="form_search">
+                                    <datalist id="form_search">
+                                        <option value="andre"></option>
+                                        <option value="pedro"></option>
+                                        <option value="joao"></option>
+                                    </datalist>
                                 </div>
 
                                 <div class="form-group">
@@ -137,6 +142,8 @@
     <script src="./js/lib.js"></script>
     <script src="./js/obj/objConfig.js"></script>
     <script src="./js/obj/objTraffic.js"></script>
+    <script src="./js/obj/objClient.js"></script>
+    <script src="./js/client.js"></script>
     <script src="./js/traffic.js"></script>
 </body>
 </html>

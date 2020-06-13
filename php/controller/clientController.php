@@ -47,12 +47,14 @@ class clientController extends controller {
     protected function insert()
     {
         if (empty($this->name)) {
-            lib::$return = ['status' => false, 'err' => 'Nome do cliente não pode estar em branco'];
+            lib::$return['status'] = false;
+            lib::$return['err'] = 'Nome do cliente não pode estar em branco';
             return false;
         }
 
         if ($this->validPhone($this->phone) === false) {
-            lib::$return = ['status' => false, 'err' => 'Telefone do cliente inválido'];
+            lib::$return['status'] = false;
+            lib::$return['err'] = 'Telefone do cliente inválido';
             return false;
         }
 
@@ -61,7 +63,8 @@ class clientController extends controller {
         );
 
         if ($result === false) {
-            lib::$return = ['status' => false, 'err' => 'Ocorreu um erro ao inserir o cliente'];
+            lib::$return['status'] = false;
+            lib::$return['err'] = 'Ocorreu um erro ao inserir o cliente';
             return false;
         }
         

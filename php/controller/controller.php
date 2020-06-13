@@ -5,7 +5,7 @@ class controller {
     /**
      * Metodo responsavel por verificar se vai inserir ou atualizar uma tabela
      */
-    public function insertOrUpdate()
+    public function insertOrUpdate ()
     {
         if ($this->id === null) {
             $result = $this->insert();
@@ -19,9 +19,20 @@ class controller {
     }
 
     /**
+     * Metodo retorna todos os registro de uma tabela
+     */
+    public function get ($table)
+    {
+        return sql::select(
+            "SELECT * FROM $table",
+            []
+        );
+    }
+
+    /**
      * Retorna o id do registro solicitado
      */
-    public function getId()
+    public function getId ()
     {
         return $this->id;
     }

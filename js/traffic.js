@@ -1,13 +1,6 @@
 const traffic = () => {
     const that = {}
     that.traffics = []
-    
-    that.form = {
-        license_plate: z('form_parking_license_plate'),
-        model: z('form_parking_model'),        
-        name: z('form_parking_name'),
-        phone: z('form_parking_phone')
-    }
 
     that.updateParkingAmounts = () => {
         let total = config.getParkingSpace()
@@ -17,7 +10,7 @@ const traffic = () => {
         z('busyAmount').textContent = busy
     }
 
-    that.changeColorSpot = (spot) => {
+    that.changeColorSpot = spot => {
         const tr = document.querySelector(`tr[formspot="${spot}"]`)
 
         if (that.traffics[spot]) {
@@ -32,15 +25,18 @@ const traffic = () => {
     }
 
     that.fillForm = () => {
-        const spot = config.data.traffic.id
+        const spot = config.cache.id_traffic
         const traffic = that.traffics[spot]
         
         if (traffic === undefined) {
             return false
         }
 
-        that.form.model.value = traffic.model
-        that.form.license_plate.value = traffic.license_plate
+        config.form.model.value = traffic.model
+        config.form.license_plate.value = traffic.license_plate
+        config.form.name.value = clientView.clients[traffic.id_client].name
+        config.form.phone.value = clientView.clients[traffic.id_client].phone
+        config.form.amount_parking.textContent = clientView.clients[traffic.id_client].amount_parking
     }
 
 
@@ -48,19 +44,19 @@ const traffic = () => {
      * Metodo responsavel por pegar o click feito na table e abrir o formulario
      * @param {event click} e 
      */
-    that.fillSpot = (e) => {
+    that.fillSpot = e => {
         const spot = e.target.parentNode.getAttribute('formspot')
         
         that.changeColorSpot(spot)
         
         //Elimino a cor ocupada da vaga anterior
-        if (config.data.traffic.id) {
-            that.changeColorSpot(config.data.traffic.id)
+        if (config.cache.id_traffic) {
+            that.changeColorSpot(config.cache.id_traffic)
             
-            that.traffics[config.data.traffic.id] && that.cleanForm()
+            that.traffics[config.cache.id_traffic] && that.cleanForm()
         }
 
-        config.data.traffic.id = spot
+        config.cache.id_traffic = spot
 
         that.fillForm()
         z('view_form_parking').classList.remove('hide-screen')
@@ -110,16 +106,17 @@ const traffic = () => {
             inputs[i].value = ''
         }
 
+        config.form.amount_parking.textContent = 0
         z('view_form_parking').classList.add('hide-screen')
     }
 
     that.cancelInsertParking = () => {
-        that.changeColorSpot(config.data.traffic.id)
+        that.changeColorSpot(config.cache.id_traffic)
         that.cleanForm()
-        config.data.clear('traffic')
+        config.cache.id_traffic = null
     }
 
-    that.updateTrafficLine = (traffic) => {
+    that.updateTrafficLine = traffic => {
         const line = document.querySelector(`tr[formspot="${traffic.parking_space}"]`)
         line.childNodes[1].textContent = traffic.model && traffic.model
         line.childNodes[2].textContent = traffic.license_plate && traffic.license_plate
@@ -127,16 +124,16 @@ const traffic = () => {
     }
 
     that.newTraffic = () => {
-        const spot = config.data.traffic.id
+        const spot = config.cache.id_traffic
 
         let data = {
             vehicle: {
-                license_plate: that.form.license_plate.value.trim(),
-                model: that.form.model.value.trim()
+                license_plate: config.form.license_plate.value.trim(),
+                model: config.form.model.value.trim()
             },
             client: {
-                name: that.form.name.value.trim(),
-                phone: that.form.phone.value.trim()
+                name: config.form.name.value.trim(),
+                phone: config.form.phone.value.trim()
             },
             traffic: {
                 parking_space: spot
@@ -147,12 +144,21 @@ const traffic = () => {
             that.traffics[spot] = new objTraffic({parking_space: spot})
         }
         
-        that.traffics[spot].insert(data, (response) => {
+        that.traffics[spot].insert(data, response => {
+            response.client && 
+            clientView.updateLocalObject({
+                id_client: response.client.id_client,
+                name: data.client.name,
+                phone: data.client.phone,
+                amount_parking: response.client.amount_parking
+            })
+
             if (response.status === false) {
                 that.traffics[spot] = undefined
                 return alert(response.err)
             }
             
+            clientView.clients[response.client.id_client].amount_parking++
             that.updateTrafficLine(that.traffics[spot])
             that.updateParkingAmounts()
             that.cleanForm()
@@ -163,8 +169,8 @@ const traffic = () => {
      * Metodo pega todos os traffics no array, instancia os objetos e atualiza a tela
      * @param {arry} traffics 
      */
-    that.fillObjectInTable = (traffics) => {
-        traffics.forEach((el) => {
+    that.fillObjectInTable = traffics => {
+        traffics.forEach(el => {
             const spot = el.parking_space
 
             that.traffics[spot] = new objTraffic(el)
