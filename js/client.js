@@ -9,9 +9,9 @@ const client = () => {
     }
 
     that.updateLocalObject = (client) => {
-        config.cache.id_client = client.id
-
-        clients[client.id] = new objClient(client)
+        config.cache.id_client = client.id_client
+        
+        that.clients[client.id_client] = new objClient(client)
 
     }
 

@@ -4,7 +4,7 @@ const objClient = function (client)  {
     that.id_client = client.id_client ? client.id_client : null
     that.name = client.name ? client.name : null
     that.amount_parking = client.amount_parking ? client.amount_parking : 0
-    that.phone = client.phone ? client.phone : ''
+    that.phone = client.phone ? client.phone : null
 
     that.set = (client) => {
         that.id_client = client.id_client

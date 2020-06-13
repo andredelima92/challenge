@@ -14,8 +14,8 @@ const traffic = () => {
         const tr = document.querySelector(`tr[formspot="${spot}"]`)
 
         if (that.traffics[spot]) {
-            tr.classList.remove('table-danger')
-            tr.classList.add('table-success')
+            tr.classList.add('table-danger')
+            tr.classList.remove('table-success')
             
             return true
         }
@@ -66,7 +66,7 @@ const traffic = () => {
     that.createLine = (traffic = {}) => {        
         const tr = document.createElement('tr')
         
-        tr.setAttribute('class', 'table-danger')
+        tr.setAttribute('class', 'table-success center-text')
         tr.setAttribute('formspot', traffic.parking_space)
         
         const spot = document.createElement('td')
@@ -118,9 +118,9 @@ const traffic = () => {
 
     that.updateTrafficLine = traffic => {
         const line = document.querySelector(`tr[formspot="${traffic.parking_space}"]`)
-        line.childNodes[1].textContent = traffic.model && traffic.model
-        line.childNodes[2].textContent = traffic.license_plate && traffic.license_plate
-        line.childNodes[3].textContent = traffic.entrance && traffic.entrance
+        line.childNodes[1].textContent = traffic.model && traffic.model.toUpperCase()
+        line.childNodes[2].textContent = traffic.license_plate && traffic.license_plate.toUpperCase()
+        line.childNodes[3].textContent = traffic.entrance && traffic.entrance.toUpperCase()
     }
 
     that.newTraffic = () => {
@@ -145,20 +145,21 @@ const traffic = () => {
         }
         
         that.traffics[spot].insert(data, response => {
-            response.client && 
-            clientView.updateLocalObject({
-                id_client: response.client.id_client,
-                name: data.client.name,
-                phone: data.client.phone,
-                amount_parking: response.client.amount_parking
-            })
+            
+            if (response.client) {
+                clientView.updateLocalObject({
+                    id_client: response.client,
+                    name: data.client.name,
+                    phone: data.client.phone,
+                })
+            }
 
             if (response.status === false) {
                 that.traffics[spot] = undefined
                 return alert(response.err)
             }
             
-            clientView.clients[response.client.id_client].amount_parking++
+            clientView.clients[response.client].amount_parking++
             that.updateTrafficLine(that.traffics[spot])
             that.updateParkingAmounts()
             that.cleanForm()

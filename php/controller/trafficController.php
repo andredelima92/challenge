@@ -136,7 +136,6 @@ class trafficController extends controller {
             return false;
         }
 
-        lib::$return = ['status' => true];
         return true;
     }
 }

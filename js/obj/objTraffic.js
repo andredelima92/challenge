@@ -16,6 +16,7 @@ const objTraffic = function (traffic)  {
     that.set = (traffic) => {
         that.id_traffic = traffic.id_traffic
         that.id_vehicle = traffic.id_vehicle
+        that.id_client = traffic.id_client
         that.entrance = traffic.entrance
         that.departure = traffic.departure
         that.stay_time = traffic.stay_time

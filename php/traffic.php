@@ -62,7 +62,7 @@ class traffic {
         $result = $traffic->insertOrUpdate();
         
         if ($result === false) return false;
-
+        
         lib::$return['status'] = true;
         return lib::$return['traffic'] = $traffic->getTraffic();
     }
