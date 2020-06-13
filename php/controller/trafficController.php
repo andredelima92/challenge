@@ -3,6 +3,7 @@
 class trafficController extends controller {
     protected $id = null;
     private $id_vehicle = null;
+    private $id_client = null;
     private $entrance = null;
     private $departure = null;
     private $stay_time = null;
@@ -11,12 +12,18 @@ class trafficController extends controller {
     
     public function __construct($traffic = null)
     {
+        if (empty($traffic)) return false;
+
         if (!empty($traffic->id_traffic)) {
             $this->id = $traffic->id_traffic;
         }
         
         if (!empty($traffic->id_vehicle)) {
             $this->id_vehicle = $traffic->id_vehicle;
+        }
+
+        if (!empty($traffic->id_client)) {
+            $this->id_client = $traffic->id_client;
         }
          
         if (!empty($traffic->entrance)) {
@@ -45,13 +52,50 @@ class trafficController extends controller {
         $this->id_vehicle = $id;
     }
 
+    public function setClient($id)
+    {
+        $this->id_client = $id;
+    }
+
+    public function getUsingTraffics ()
+    {
+        return sql::select(
+            "SELECT a.*, b.model, b.license_plate FROM traffics a
+            INNER JOIN vehicles b on a.id_vehicle = b.id_vehicle
+            WHERE a.departure is null",
+            []
+        );
+    }
+
+    /**
+     * Metodo verifica se o veiculo ja não ocupa outra vaga
+     */
+    public function isBusy ($plate)
+    {
+        $result = sql::select(
+            "SELECT a.id_traffic FROM traffics a 
+            INNER JOIN vehicles b ON a.id_vehicle = b.id_vehicle
+            WHERE a.departure is null AND b.license_plate = :plate",
+            ['plate' => $plate]
+        );
+        
+        if (!empty($result)) {
+            lib::$return = ['status' => false, 'err' => 'Veículo já ocupa outra vaga'];
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Metodo retorna o traffic atual na memoria completo do banco
      */
     public function getTraffic()
     {
         return sql::select(
-            "SELECT * FROM traffics WHERE id_traffic = :id",
+            "SELECT a.*, b.model, b.license_plate FROM traffics a
+            INNER JOIN vehicles b on a.id_vehicle = b.id_vehicle
+            WHERE a.id_traffic = :id",
             ['id' => $this->id]
         )[0];
     }
@@ -80,9 +124,9 @@ class trafficController extends controller {
     {
         $result = sql::insert(
             'traffics',
-            'id_vehicle, parking_space',
-            ':id_vehicle, :parking_space',
-            ['id_vehicle' => $this->id_vehicle, 'parking_space' => $this->parking_space]
+            'id_vehicle, id_client, parking_space',
+            ':id_vehicle, :id_client, :parking_space',
+            ['id_vehicle' => $this->id_vehicle, 'parking_space' => $this->parking_space, 'id_client' => $this->id_client]
         );
 
         if ($result === false) {

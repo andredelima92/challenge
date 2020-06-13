@@ -2,7 +2,6 @@
 
 class vehicleController extends controller {
     protected $id = null;
-    private $id_client = null;
     private $model = null;
     public $license_plate = null;
 
@@ -12,10 +11,6 @@ class vehicleController extends controller {
             $this->id = $vehicle->id_vehicle;
         }
         
-        if (!empty($vehicle->id_client)) {
-            $this->id_client = $vehicle->id_client;
-        }
-         
         if (!empty($vehicle->model)) {
             $this->model = $vehicle->model;
         }
@@ -39,17 +34,12 @@ class vehicleController extends controller {
         return true;
     }
 
-    public function setClient($id)
-    {
-        $this->id_client = $id;
-    }
-
     protected function update()
     {
-        $result = sql::update('vehicles', 'id_client = :id_client, model = :model', 'license_plate = :license_plate',
-                            ['id_client' => $this->id_client, 'model' => $this->model, 'license_plate' => $this->license_plate]
+        $result = sql::update('vehicles', 'model = :model', 'license_plate = :license_plate',
+                            ['model' => $this->model, 'license_plate' => $this->license_plate]
         );  
-            
+        
         if ($result === false) {
             lib::$return = ['status' => false,'err' => 'Ocorreu um erro ao atualizar o veículo'];
             return false;
@@ -67,17 +57,12 @@ class vehicleController extends controller {
     }
     
     /**
-     * Metodo responsavel por cadastrar um novo cliente
+     * Metodo responsavel por cadastrar um novo veiculo
      */
     protected function insert()
     {
-        if (empty($this->id_client)) {
-            lib::$return = ['status' => false, 'err' => 'Dono do veículo não informado'];
-            return false;
-        }
-        
-        $result = sql::insert('vehicles', 'id_client, model, license_plate', ':id_client, :model, :license_plate', 
-                            ['id_client' => $this->id_client, 'model' => $this->model, 'license_plate' => $this->license_plate]
+        $result = sql::insert('vehicles', 'model, license_plate', ':model, :license_plate', 
+                            ['model' => $this->model, 'license_plate' => $this->license_plate]
         );
         
         if ($result === false) {
