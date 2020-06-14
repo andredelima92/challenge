@@ -15,7 +15,7 @@ const client = () => {
         const table = z('form_search_body')
 
         let html = ''
-
+        
         that.clients.forEach(el => {
             html +=
             `<tr id_client="${el.id_client}">
@@ -38,10 +38,10 @@ const client = () => {
         tr.setAttribute('id_client', client.id_client)
         
         const tdName = document.createElement('td')
-        tdLicense.textContent = client.name
+        tdName.textContent = client.name
         
         const tdPhone = document.createElement('td')
-        tdModel.textContent = client.phone ? client.phone : ''
+        tdPhone.textContent = client.phone ? client.phone : ''
 
         tr.appendChild(tdName)
         tr.appendChild(tdPhone)
@@ -68,7 +68,7 @@ const client = () => {
      * Metodo seleciona o cliente dentro de um search criado pelo formSearchClient
      * @param {event click} e 
      */
-    that.selectUserFromSeach = (e) => {
+    that.selectUserFromSearch = (e) => {
         const id_client = e.target.parentNode.getAttribute('id_client')
         that.fillFormClient(id_client)
         
@@ -124,7 +124,6 @@ const client = () => {
 
         config.form.name.value = that.clients[id_client].name
         config.form.phone.value = that.clients[id_client].phone
-        config.form.amount_parking.textContent = that.clients[id_client].amount_parking
     }
 
     /**
@@ -149,7 +148,7 @@ const client = () => {
         that.getClientsToMemory()
 
         z('form_parking_name', that.formSearchClient, 'input')
-        z('form_search_body', that.selectUserFromSeach)
+        z('form_search_body', that.selectUserFromSearch)
         return that
     }
 

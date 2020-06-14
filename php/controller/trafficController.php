@@ -42,8 +42,10 @@ class trafficController extends controller {
             $this->price = $traffic->price;
         }
         
-        if (!empty($traffic->parking_space) || $traffic->parking_space == 0) {
-            $this->parking_space = $traffic->parking_space;
+        if (!empty($traffic->parking_space)) {
+            if ($traffic->parking_space !== 0) {
+                $this->parking_space = $traffic->parking_space;
+            }
         }
     }
 
@@ -57,14 +59,38 @@ class trafficController extends controller {
         $this->id_client = $id;
     }
 
+    /**
+     * Metodo retorna todos os traffics ativos nas vagas
+     */
     public function getUsingTraffics ()
     {
         return sql::select(
             "SELECT a.*, b.model, b.license_plate FROM traffics a
             INNER JOIN vehicles b on a.id_vehicle = b.id_vehicle
-            WHERE a.departure is null",
+            WHERE a.departure is null and payed = 0",
             []
         );
+    }
+
+
+     /**
+     * Metodo responsavel por verificar se vai inserir ou atualizar uma tabela
+     */
+    public function delete ()
+    {
+        if ($this->id === null) {
+            lib::$return['err'] = 'Ocorreu um erro ao remover a vaga';
+            return false;
+        }
+
+        sql::delete(
+            'traffics',
+            'id_traffic = :id_traffic',
+            ['id_traffic' => $this->id]
+        );
+
+        lib::$return['status'] = true;
+        return true;
     }
 
     /**
@@ -80,7 +106,6 @@ class trafficController extends controller {
         );
         
         if (!empty($result)) {
-            lib::$return['status'] = false;
             lib::$return['err'] = 'Veículo já ocupa outra vaga';
             return true;
         }
@@ -94,7 +119,7 @@ class trafficController extends controller {
     public function getTraffic()
     {
         return sql::select(
-            "SELECT a.*, b.model, b.license_plate FROM traffics a
+            "SELECT *, b.model, b.license_plate FROM traffics a
             INNER JOIN vehicles b on a.id_vehicle = b.id_vehicle
             WHERE a.id_traffic = :id",
             ['id' => $this->id]
@@ -131,7 +156,6 @@ class trafficController extends controller {
         );
 
         if ($result === false) {
-            lib::$return['status'] = false;
             lib::$return['err'] = 'Ocorreu um erro ao incluir o veículo no estacionamento';
             return false;
         }

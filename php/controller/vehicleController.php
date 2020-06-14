@@ -3,6 +3,7 @@
 class vehicleController extends controller {
     protected $id = null;
     private $model = null;
+    private $amount_parking = null;
     public $license_plate = null;
 
     public function __construct($vehicle = null)
@@ -13,6 +14,10 @@ class vehicleController extends controller {
         
         if (!empty($vehicle->model)) {
             $this->model = $vehicle->model;
+        }
+
+        if (!empty($vehicle->amount_parking)) {
+            $this->amount_parking = $vehicle->amount_parking;
         }
 
         if (!empty($vehicle->license_plate)) {

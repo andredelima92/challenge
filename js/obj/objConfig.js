@@ -13,6 +13,40 @@ const objConfig = function() {
         amount_parking: z('form_amount_parking')
     }
 
+    that.disableForm = () => {
+        return {
+            client: () => {
+                that.form.name.disabled = true
+                that.form.phone.disabled = true
+            },
+            vehicle: () => {
+                that.form.model.disabled = true
+                that.form.license_plate.disabled = true
+            },
+            all: () => {
+                that.disableForm().client()
+                that.disableForm().vehicle()
+            }
+        }
+    }
+
+    that.enableForm = () => {
+        return {
+            client: () => {
+                that.form.name.disabled = false
+                that.form.phone.disabled = false
+            },
+            vehicle: () => {
+                that.form.model.disabled = false
+                that.form.license_plate.disabled = false
+            },
+            all: () => {
+                that.enableForm().client()
+                that.enableForm().vehicle()
+            }
+        }
+    }
+
     that.cache = {
         id_client: null,
         id_traffic: null,

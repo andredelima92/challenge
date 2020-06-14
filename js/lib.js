@@ -14,6 +14,16 @@ const z = (id, event, action = 'click') => {
 };
 
 /**
+ * Retorna o value do SELECT selecionado
+ * @return {string} [value do select selecionado]
+ */
+HTMLSelectElement.prototype.getValue = function () { 
+    var select = this; 
+    return select.options[select.selectedIndex].value;
+};
+
+
+/**
  * @param {metodo para ser executado somente quando a pagina for carregada} callback 
  */
 const loadMananger = (callback) => {
@@ -27,8 +37,8 @@ let lib = () => {
         timestamp = new Date(timestamp)
         let newDate = timestamp.getDate()
 
-        newDate += '-' + timestamp.getMonth()
-        newDate += '-' + timestamp.getFullYear()
+        newDate += '/' + timestamp.getMonth()
+        newDate += '/' + timestamp.getFullYear()
         newDate += '  ' + timestamp.getHours()
         newDate += ':' + timestamp.getMinutes()
         newDate += ':' + timestamp.getSeconds()

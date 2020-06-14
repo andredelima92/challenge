@@ -4,7 +4,11 @@ const traffic = () => {
 
     that.updateParkingAmounts = () => {
         let total = config.getParkingSpace()
-        let busy = Object.keys(that.traffics).length
+        let busy = 0 
+        
+        that.traffics.forEach(e => {
+            if (e !== undefined) busy++
+        })
 
         z('freeAmount').textContent = total - busy
         z('busyAmount').textContent = busy
@@ -20,8 +24,8 @@ const traffic = () => {
             return true
         }
 
-        tr.classList.toggle('table-success')
-        tr.classList.toggle('table-danger')
+        tr.classList.add('table-success')
+        tr.classList.remove('table-danger')
     }
 
     that.fillForm = () => {
@@ -29,13 +33,16 @@ const traffic = () => {
         const traffic = that.traffics[spot]
         
         if (traffic === undefined) {
+            config.enableForm().all()
             z('btn_new_traffic').classList.remove('hide-screen')
+            z('btn_edit_traffic').classList.add('hide-screen')
             return false
         }
         
+        config.disableForm().all()
         z('btn_new_traffic').classList.add('hide-screen')
-        config.form.model.value = traffic.model
-        config.form.license_plate.value = traffic.license_plate
+        z('btn_edit_traffic').classList.remove('hide-screen')
+        vehicleView.fillFormVehicle(traffic.id_vehicle)
         clientView.fillFormClient(traffic.id_client)
     }
 
@@ -44,9 +51,11 @@ const traffic = () => {
      * @param {event click} e 
      */
     that.fillSpot = e => {
-        const spot = e.target.parentNode.getAttribute('formspot')
+        const tr = e.target.parentNode
+        const spot = tr.getAttribute('formspot')
         
-        that.changeColorSpot(spot)
+        tr.classList.add('table-danger')
+        tr.classList.remove('table-success')
         
         //Elimino a cor ocupada da vaga anterior
         if (config.cache.id_traffic) {
@@ -92,11 +101,6 @@ const traffic = () => {
             const tr = that.createLine({parking_space: i + 1})
             table.append(tr)    
         }
-
-        const list = table.childNodes
-        for (let i = 0; i < spots; i++) {
-            list[i].addEventListener('click', that.fillSpot)
-        }
     }
 
     that.cleanForm = (id = 'form_traffic') => {
@@ -107,8 +111,7 @@ const traffic = () => {
 
         config.form.amount_parking.textContent = 0
         z('view_form_parking').classList.add('hide-screen')
-        config.cache.id_client = null
-        config.cache.id_vehicle = null
+        config.cache.clear()
     }
 
     that.cancelInsertParking = () => {
@@ -119,9 +122,9 @@ const traffic = () => {
 
     that.updateTrafficLine = traffic => {
         const line = document.querySelector(`tr[formspot="${traffic.parking_space}"]`)
-        line.childNodes[1].textContent = traffic.model && traffic.model.toUpperCase()
-        line.childNodes[2].textContent = traffic.license_plate && traffic.license_plate.toUpperCase()
-        line.childNodes[3].textContent = traffic.entrance && lib.formatDate(traffic.entrance)
+        line.childNodes[1].textContent = traffic.model ? traffic.model.toUpperCase() : ''
+        line.childNodes[2].textContent = traffic.license_plate ? traffic.license_plate.toUpperCase() : ''
+        line.childNodes[3].textContent = traffic.entrance ? lib.formatDate(traffic.entrance) : ''
     }
 
     that.newTraffic = () => {
@@ -129,6 +132,7 @@ const traffic = () => {
 
         let data = {
             vehicle: {
+                id_vehicle: config.cache.id_vehicle ? config.cache.id_vehicle : null,
                 license_plate: config.form.license_plate.value.trim(),
                 model: config.form.model.value.trim()
             },
@@ -141,7 +145,7 @@ const traffic = () => {
                 parking_space: spot
             }
         }
-
+        
         if (that.traffics[spot] === undefined) {
             that.traffics[spot] = new objTraffic({parking_space: spot})
         }
@@ -169,7 +173,7 @@ const traffic = () => {
                 return alert(response.err)
             }
             
-            clientView.clients[response.client].amount_parking++
+            vehicleView.vehicles[response.vehicle].amount_parking++
             that.updateTrafficLine(that.traffics[spot])
             that.updateParkingAmounts()
             that.cleanForm()
@@ -183,7 +187,7 @@ const traffic = () => {
     that.fillObjectInTable = traffics => {
         traffics.forEach(el => {
             const spot = el.parking_space
-
+            
             that.traffics[spot] = new objTraffic(el)
             that.updateTrafficLine(that.traffics[spot])
             that.changeColorSpot(spot)
@@ -206,6 +210,47 @@ const traffic = () => {
         })
     }
 
+    that.removeTraffic = e => {
+        const spot = config.cache.id_traffic
+        
+        that.traffics[spot].delete(response => {
+            if (response.status) {
+                vehicleView.vehicles[that.traffics[spot].id_vehicle].amount_parking--
+                that.traffics[spot] = undefined
+                that.updateTrafficLine({parking_space: spot})
+                that.cleanForm()
+                that.changeColorSpot(spot)
+                config.cache.clear()
+                that.updateParkingAmounts()
+            }
+        })
+    }
+
+    /**
+     * Metodo realiza a troca da visualização da tela de vagas em aberto pro financeiro pendente
+     */
+    that.showPendency = () => {
+        const  opt = z('option_parking').getValue()
+        
+        if (opt === '1') {
+            z('table_parking_view').classList.remove('hide-screen')
+            return z('table_payment_view').classList.add('hide-screen')
+        }
+
+        z('table_payment_view').classList.remove('hide-screen')
+        z('table_parking_view').classList.add('hide-screen')
+    }
+
+    that.exitTraffic = () => {
+        that.traffics[config.cache.id_traffic].exit(responde => {
+            if (!response.status) {
+                return alert(response.err)
+            }
+
+
+        })
+    }
+
     /**
      * Metodo construct
      */
@@ -216,7 +261,11 @@ const traffic = () => {
             that.getUsingTraffics()
         })
 
+        z('table_parking', that.fillSpot)
+        z('option_parking', that.showPendency, 'change')
+        z('form_parking_pay', that.exitTraffic)
         z('form_parking_save', that.newTraffic)
+        z('form_parking_delete', that.removeTraffic)
         z('form_parking_cancel', that.cancelInsertParking)
         return that
     }

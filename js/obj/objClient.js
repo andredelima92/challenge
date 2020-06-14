@@ -1,16 +1,10 @@
 const objClient = function (client)  {
     const that = {}
-    
-    that.id_client = client.id_client ? client.id_client : null
-    that.name = client.name ? client.name : null
-    that.amount_parking = client.amount_parking ? client.amount_parking : 0
-    that.phone = client.phone ? client.phone : null
 
     that.set = (client) => {
-        that.id_client = client.id_client ? client.id_client : that.id_client
-        that.name = client.name ? client.name : that.name
-        that.amount_parking = client.amount_parking ? client.amount_parking : that.amount_parking
-        that.phone = client.phone ? client.phone : that.phone
+        that.id_client = client.id_client ? client.id_client : null
+        that.name = client.name ? client.name : null
+        that.phone = client.phone ? client.phone : null
     }
 
     that.update = (data, callback) => {
@@ -28,9 +22,10 @@ const objClient = function (client)  {
     /**
      * Metodo construct
      */
-    that.init = () => {
+    that.init = (client) => {
+        that.set(client)
         return that
     }
 
-    return that.init()
+    return that.init(client)
 }
