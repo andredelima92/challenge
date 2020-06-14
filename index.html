@@ -103,12 +103,16 @@
                                     <label for="name">
                                         Proprietário <span class="badge badge-success" id="form_amount_parking">0</span>
                                     </label>
-                                    <input type="text" class="form-control" id="form_parking_name" maxlength="255" list="form_search">
-                                    <datalist id="form_search">
-                                        <option value="andre"></option>
-                                        <option value="pedro"></option>
-                                        <option value="joao"></option>
-                                    </datalist>
+                                    <input type="text" class="form-control" id="form_parking_name" maxlength="255">
+                                    <table class="table table-hover table-borderless table-search hide-screen" id="form_search">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th ><i class="close" id="close_form_search">X</i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="form_search_body"></tbody>
+                                    </table>
                                 </div>
 
                                 <div class="form-group">

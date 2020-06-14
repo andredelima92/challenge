@@ -34,14 +34,11 @@ const traffic = () => {
 
         config.form.model.value = traffic.model
         config.form.license_plate.value = traffic.license_plate
-        config.form.name.value = clientView.clients[traffic.id_client].name
-        config.form.phone.value = clientView.clients[traffic.id_client].phone
-        config.form.amount_parking.textContent = clientView.clients[traffic.id_client].amount_parking
+        clientView.fillFormClient(traffic.id_client)
     }
 
-
     /**
-     * Metodo responsavel por pegar o click feito na table e abrir o formulario
+     * Metodo responsavel por pegar o click feito na tabela e abrir o formulario
      * @param {event click} e 
      */
     that.fillSpot = e => {
@@ -108,12 +105,14 @@ const traffic = () => {
 
         config.form.amount_parking.textContent = 0
         z('view_form_parking').classList.add('hide-screen')
+        config.cache.id_client = null
+        config.cache.id_vehicle = null
     }
 
     that.cancelInsertParking = () => {
         that.changeColorSpot(config.cache.id_traffic)
         that.cleanForm()
-        config.cache.id_traffic = null
+        config.cache.clear()
     }
 
     that.updateTrafficLine = traffic => {
@@ -132,6 +131,7 @@ const traffic = () => {
                 model: config.form.model.value.trim()
             },
             client: {
+                id_client: config.cache.id_client ? config.cache.id_client : null,
                 name: config.form.name.value.trim(),
                 phone: config.form.phone.value.trim()
             },
@@ -216,5 +216,5 @@ const traffic = () => {
 
 loadMananger(() => {
     config = new objConfig
-    p = traffic()
+    trafficView = traffic()
 })

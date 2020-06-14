@@ -40,11 +40,11 @@ class clientController extends controller {
 
         return true;
     }
-    
+
     /**
-     * Metodo responsavel por cadastrar um novo cliente
+     * Metodo verificar se os dados os clientes estão validos para serem gravados no banco de dados
      */
-    protected function insert()
+    private function validateClient () 
     {
         if (empty($this->name)) {
             lib::$return['status'] = false;
@@ -57,6 +57,39 @@ class clientController extends controller {
             lib::$return['err'] = 'Telefone do cliente inválido';
             return false;
         }
+
+        return true;
+    }
+
+
+    /**
+     * Metodo responsavel por alterar o cadastro de um cliente existente
+     */
+    protected function update()
+    {
+        if ($this->validateClient() === false) return false;
+
+        $result = sql::update('clients',
+            'name = :name, phone = :phone', 
+            'id_client = :id_client',
+            ['name' => $this->name, 'phone' => $this->phone, 'id_client' => $this->id]
+        );
+
+        if ($result === false) {
+            lib::$return['status'] = false;
+            lib::$return['err'] = 'Ocorreu um erro ao atualizar o cliente';
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Metodo responsavel por cadastrar um novo cliente
+     */
+    protected function insert()
+    {
+        if ($this->validateClient() === false) return false;
 
         $result = sql::insert('clients', 'name, phone', ':name, :phone', 
                             ['name' => $this->name, 'phone' => $this->phone]

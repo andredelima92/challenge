@@ -16,6 +16,8 @@ class controller {
             
             return $result;
         }
+
+        return $this->update();
     }
 
     /**
