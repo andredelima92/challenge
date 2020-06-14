@@ -5,22 +5,22 @@ const objConfig = function() {
     let hourValue = null
     let prefix = null
 
-    that.data = {
-        client:   {
-            id: null,
-        },
-        traffic:  {
-            id: null
-        },
-        vehicles: {
-            id: null
-        },
-        clear: (param) => {
-            if (param) return that.data[param].id = null
-            
-            that.data[param].client.id = null
-            that.data[param].traffic.id = null
-            that.data[param].vehicles.id = null
+    that.form = {
+        license_plate: z('form_parking_license_plate'),
+        model: z('form_parking_model'),        
+        name: z('form_parking_name'),
+        phone: z('form_parking_phone'),
+        amount_parking: z('form_amount_parking')
+    }
+
+    that.cache = {
+        id_client: null,
+        id_traffic: null,
+        id_vehicle: null,
+        clear: () => {            
+            that.cache.id_client = null
+            that.cache.id_traffic = null
+            that.cache.id_vehicle = null
         }
     }
 

@@ -45,3 +45,24 @@ header {
 .hide-screen {
     display: none;
 }
+
+.center-text {
+    text-align: center;
+}
+
+.table-search {
+    background-color: rgb(247, 242, 242);
+    box-shadow: 3px 3px rgb(94, 92, 92);
+    border-radius: 5px;
+    position: absolute;
+    width: 350px
+}
+
+#form_search thead th{   
+    padding: 3px;
+    padding-right: 9px;
+}
+
+.close:hover{
+    cursor: pointer;
+}

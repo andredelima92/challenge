@@ -80,7 +80,8 @@ class trafficController extends controller {
         );
         
         if (!empty($result)) {
-            lib::$return = ['status' => false, 'err' => 'Veículo já ocupa outra vaga'];
+            lib::$return['status'] = false;
+            lib::$return['err'] = 'Veículo já ocupa outra vaga';
             return true;
         }
 
@@ -130,11 +131,11 @@ class trafficController extends controller {
         );
 
         if ($result === false) {
-            lib::$return = ['status' => false, 'err' => 'Ocorreu um erro ao incluir o veículo no estacionamento'];
+            lib::$return['status'] = false;
+            lib::$return['err'] = 'Ocorreu um erro ao incluir o veículo no estacionamento';
             return false;
         }
 
-        lib::$return = ['status' => true];
         return true;
     }
 }

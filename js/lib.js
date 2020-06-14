@@ -55,7 +55,7 @@ let lib = () => {
             if (obj.readyState == 4 && obj.status == 200) {
                 let data = obj.response
                 data = JSON.parse(data)
-                
+
                 callback && callback(data)
             }
         }

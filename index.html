@@ -51,11 +51,11 @@
                 <div class="row">
                     <div class="col-sm-6" style="border-right: 2px solid grey;">
                         <div class="form-group row">
-                            <span class="navbar-brand" href="#parking" style="color: green;">Vagas Disponíveis:<span class="badge badge-light" id="freeAmount"></span></span>
-                            <span class="navbar-brand" href="#parking" style="color: red;">Vagas Ocupadas:<span class="badge badge-light" id="busyAmount"></span></span>
+                            <span class="navbar-brand" href="#parking" style="color: rgb(143,209,158); font-weight: 900;">VAGAS DISPONÍVEIS:<span class="badge badge-light" id="freeAmount"></span></span>
+                            <span class="navbar-brand" href="#parking" style="color: rgb(216, 160, 166); font-weight: 900;">VAGAS OCUPADAS:<span class="badge badge-light" id="busyAmount"></span></span>
                             <select class="select-parking">
-                              <option>Vagas</option>
-                              <option>Pendências</option>
+                              <option>VAGAS</option>
+                              <option>PENDÊNCIAS</option>
                             </select>
                         </div>
                         <div class="table-wrapper-scroll-y my-custom-scrollbar">
@@ -63,16 +63,16 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>
-                                            Vaga
+                                            VAGA
                                         </th>
                                         <th>
-                                            Veiculo
+                                            VEÍCULO
                                         </th>
                                         <th>
-                                            Placa
+                                            PLACA
                                         </th>
                                         <th>
-                                            Entrada
+                                            ENTRADA
                                         </th>
                                     </tr>
                                 </thead>
@@ -101,9 +101,18 @@
                                 <div class="form-group">
                                     
                                     <label for="name">
-                                        Proprietário <span class="badge badge-warning">0</span>
+                                        Proprietário <span class="badge badge-success" id="form_amount_parking">0</span>
                                     </label>
                                     <input type="text" class="form-control" id="form_parking_name" maxlength="255">
+                                    <table class="table table-hover table-borderless table-search hide-screen" id="form_search">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th ><i class="close" id="close_form_search">X</i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="form_search_body"></tbody>
+                                    </table>
                                 </div>
 
                                 <div class="form-group">
@@ -137,6 +146,8 @@
     <script src="./js/lib.js"></script>
     <script src="./js/obj/objConfig.js"></script>
     <script src="./js/obj/objTraffic.js"></script>
+    <script src="./js/obj/objClient.js"></script>
+    <script src="./js/client.js"></script>
     <script src="./js/traffic.js"></script>
 </body>
 </html>
