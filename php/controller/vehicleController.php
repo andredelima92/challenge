@@ -41,7 +41,9 @@ class vehicleController extends controller {
         );  
         
         if ($result === false) {
-            lib::$return = ['status' => false,'err' => 'Ocorreu um erro ao atualizar o veículo'];
+            lib::$return['status'] = false;
+            lib::$return['err'] = 'Ocorreu um erro ao atualizar o veículo';
+
             return false;
         }
 

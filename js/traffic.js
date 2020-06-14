@@ -29,9 +29,11 @@ const traffic = () => {
         const traffic = that.traffics[spot]
         
         if (traffic === undefined) {
+            z('btn_new_traffic').classList.remove('hide-screen')
             return false
         }
-
+        
+        z('btn_new_traffic').classList.add('hide-screen')
         config.form.model.value = traffic.model
         config.form.license_plate.value = traffic.license_plate
         clientView.fillFormClient(traffic.id_client)
@@ -119,7 +121,7 @@ const traffic = () => {
         const line = document.querySelector(`tr[formspot="${traffic.parking_space}"]`)
         line.childNodes[1].textContent = traffic.model && traffic.model.toUpperCase()
         line.childNodes[2].textContent = traffic.license_plate && traffic.license_plate.toUpperCase()
-        line.childNodes[3].textContent = traffic.entrance && traffic.entrance.toUpperCase()
+        line.childNodes[3].textContent = traffic.entrance && lib.formatDate(traffic.entrance)
     }
 
     that.newTraffic = () => {
@@ -151,6 +153,14 @@ const traffic = () => {
                     id_client: response.client,
                     name: data.client.name,
                     phone: data.client.phone,
+                })
+            }
+
+            if (response.vehicle) {
+                vehicleView.updateLocalObject({
+                    id_vehicle: response.vehicle,
+                    license_plate: data.vehicle.license_plate,
+                    model: data.vehicle.model,
                 })
             }
 

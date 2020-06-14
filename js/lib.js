@@ -23,6 +23,19 @@ const loadMananger = (callback) => {
 let lib = () => {
     let that = {}
 
+    that.formatDate = timestamp => {
+        timestamp = new Date(timestamp)
+        let newDate = timestamp.getDate()
+
+        newDate += '-' + timestamp.getMonth()
+        newDate += '-' + timestamp.getFullYear()
+        newDate += '  ' + timestamp.getHours()
+        newDate += ':' + timestamp.getMinutes()
+        newDate += ':' + timestamp.getSeconds()
+
+        return newDate
+    }
+
     that.ajax = (params, callback, before) => {
         params.ts = parseInt((new Date().getTime() /1000).toFixed(0))
 
