@@ -89,6 +89,15 @@
                                         Placa do Veiculo
                                     </label>
                                     <input type="text" class="form-control" id="form_parking_license_plate" maxlength="7">
+                                    <table class="table table-hover table-borderless table-search hide-screen" id="form_search_vehicle">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th ><i class="close">X</i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="form_search_vehicle_body"></tbody>
+                                    </table>
                                 </div>
                                 <div class="form-group">
                                     
@@ -108,7 +117,7 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th ><i class="close" id="close_form_search">X</i></th>
+                                                <th ><i class="close">X</i></th>
                                             </tr>
                                         </thead>
                                         <tbody id="form_search_body"></tbody>
@@ -122,13 +131,14 @@
                                     </label>
                                     <input type="tel" class="form-control" id="form_parking_phone" maxlength="11">
                                 </div>
-                                
-                                <button type="button" class="btn btn-primary" id="form_parking_save">
-                                    Salvar
-                                </button>
-                                <button type="button" class="btn btn-danger" id="form_parking_cancel">
-                                    Cancelar
-                                </button>
+                                <div id="btn_new_traffic" class="hide-screen">
+                                    <button type="button" class="btn btn-primary" id="form_parking_save">
+                                        Salvar
+                                    </button>
+                                    <button type="button" class="btn btn-danger" id="form_parking_cancel">
+                                        Cancelar
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -147,7 +157,9 @@
     <script src="./js/obj/objConfig.js"></script>
     <script src="./js/obj/objTraffic.js"></script>
     <script src="./js/obj/objClient.js"></script>
+    <script src="./js/obj/objVehicle.js"></script>
     <script src="./js/client.js"></script>
+    <script src="./js/vehicle.js"></script>
     <script src="./js/traffic.js"></script>
 </body>
 </html>

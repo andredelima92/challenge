@@ -58,9 +58,18 @@ header {
     width: 350px
 }
 
-#form_search thead th{   
+#form_search thead th {   
     padding: 3px;
     padding-right: 9px;
+}
+
+#form_search_vehicle thead th {
+    padding: 3px;
+    padding-right: 9px;
+}
+
+.close {
+    font-size: 15px;
 }
 
 .close:hover{

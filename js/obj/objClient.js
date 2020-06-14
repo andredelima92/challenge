@@ -7,10 +7,10 @@ const objClient = function (client)  {
     that.phone = client.phone ? client.phone : null
 
     that.set = (client) => {
-        that.id_client = client.id_client
-        that.name = client.name
-        that.amount_parking = client.amount_parking
-        that.phone = client.phone
+        that.id_client = client.id_client ? client.id_client : that.id_client
+        that.name = client.name ? client.name : that.name
+        that.amount_parking = client.amount_parking ? client.amount_parking : that.amount_parking
+        that.phone = client.phone ? client.phone : that.phone
     }
 
     that.update = (data, callback) => {

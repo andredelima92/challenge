@@ -56,6 +56,8 @@ class traffic {
             return false;
         }
 
+        lib::$return['vehicle'] = $vehicle->getId();
+
         $traffic->setClient($client->getId());
         $traffic->setVehicle($vehicle->getId());
         

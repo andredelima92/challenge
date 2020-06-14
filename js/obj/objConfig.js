@@ -53,10 +53,29 @@ const objConfig = function() {
         callback && callback()
     }
 
+     /**
+     * Metodo realiza o fechamento da tela de pesquisa de no formulario traffic
+     */
+    that.closeFormSearch = (e) => {
+        const id = e.target.parentNode.parentNode.parentNode.parentNode.id
+
+        z(id).style.display = 'none'
+    }
+
+    that.makeCloseEvents = () => {
+        const el = document.getElementsByClassName('close')
+
+        for (let i = el.length - 1; i >= 0; i--) {
+            el[i].addEventListener('click', that.closeFormSearch)
+        }
+    }
+
     /**
      * Metodo construct
      */
     let init = () => {
+
+        that.makeCloseEvents()
         return that
     }
 

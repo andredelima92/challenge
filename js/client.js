@@ -8,11 +8,60 @@ const client = () => {
         })
     }
 
+     /**
+     * Metodo cria a table usada para pesquisa dos clientes ao incluir um traffic
+     */
+    that.fillTableForSearchTrafficClient = () => {
+        const table = z('form_search_body')
+
+        let html = ''
+
+        that.clients.forEach(el => {
+            html +=
+            `<tr id_client="${el.id_client}">
+                <td>${el.name}</td>
+                <td>${el.phone ? el.phone : ''}</td>
+            </tr>
+            `
+        })
+
+        table.innerHTML = html
+    }
+
+     /**
+     * Metodo realiza a alteração da tabela de pesquisa de clientes com um novo cliente criado
+     * @param {object} client
+     */
+    that.append = client => {
+        const table = z('form_search_body')
+        const tr = document.createElement('tr')
+        tr.setAttribute('id_client', client.id_client)
+        
+        const tdName = document.createElement('td')
+        tdLicense.textContent = client.name
+        
+        const tdPhone = document.createElement('td')
+        tdModel.textContent = client.phone ? client.phone : ''
+
+        tr.appendChild(tdName)
+        tr.appendChild(tdPhone)
+
+        table.appendChild(tr)
+    }
+
+    /**
+     * Metodo invocado principalmente pelo traffic para atualizar os objetos na memoria
+     * @param {object} client 
+     */
     that.updateLocalObject = (client) => {
         config.cache.id_client = client.id_client
         
-        that.clients[client.id_client] = new objClient(client)
+        if (!that.clients[client.id_client]) {
+            that.clients[client.id_client] = new objClient(client)
+            return that.append(that.clients[client.id_client])
+        }
 
+        that.clients[client.id_client].set(client)
     }
 
       /**
@@ -23,7 +72,7 @@ const client = () => {
         const id_client = e.target.parentNode.getAttribute('id_client')
         that.fillFormClient(id_client)
         
-        that.closeClientFormSearch()
+        z('form_search').style.display = 'none'
     }
 
       /**
@@ -75,30 +124,8 @@ const client = () => {
 
         config.form.name.value = that.clients[id_client].name
         config.form.phone.value = that.clients[id_client].phone
-        config.form.amount_parking.that = clientView.clients[id_client].amount_parking
+        config.form.amount_parking.textContent = that.clients[id_client].amount_parking
     }
-
-
-    /**
-     * Metodo cria a table usada para pesquisa dos clientes ao incluir um traffic
-     */
-    that.fillTableForSearchTrafficClient = () => {
-        const table = z('form_search_body')
-
-        let html = ''
-
-        that.clients.forEach(el => {
-            html +=
-            `<tr id_client="${el.id_client}">
-                <td>${el.name}</td>
-                <td>${el.phone ? el.phone : ''}</td>
-            </tr>
-            `
-        })
-
-        table.innerHTML = html
-    }
-
 
     /**
      * Metodo pega todos os clientes cadastrados no servidor e carrega pra memoria
@@ -115,21 +142,12 @@ const client = () => {
         })
     }
 
-    /**
-     * Metodo realiza o fechamento da tela de pesquisa de clientes no formulario traffic
-     */
-    that.closeClientFormSearch = () => {
-        const search = z('form_search')
-        search.style.display = 'none'
-    }
-    
       /**
      * Metodo construct
      */
     that.init = () => {
         that.getClientsToMemory()
 
-        z('close_form_search', that.closeClientFormSearch)
         z('form_parking_name', that.formSearchClient, 'input')
         z('form_search_body', that.selectUserFromSeach)
         return that
