@@ -22,6 +22,29 @@ class traffic {
         return lib::$return = ['status' => true, 'traffics' => $this->traffic->getUsingTraffics()];
     }
 
+    /**
+     * Metodo realiza o procedimento de dar baixa em um veiculo em uma vaga
+     */
+    public function exit ()
+    {
+        if ($this->traffic->updateDeparture() === false) {
+            return false;
+        }
+
+        return lib::$return = ['status' => true, 'traffic' => $this->traffic->getTraffic()];
+    }
+
+    /**
+     * Metodo realiza o pagamento de uma vaga de estacionamento
+     */
+    public function pay ()
+    {
+        return $this->traffic->pay();
+    }
+
+    /**
+     * Exclui um traffic uma vaga de veiculo
+     */
     public function removeTraffic () 
     {
         return $this->traffic->delete('traffic');

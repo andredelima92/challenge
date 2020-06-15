@@ -28,13 +28,29 @@ const objTraffic = function (traffic)  {
         })
     }
 
+    that.pay = () => {
+        lib.ajax({
+            s: 'traffic',
+            a: 'pay',
+            type: 'GET',
+            data: {
+                traffic: {
+                    id_traffic: that.id_traffic
+                }
+            }
+        })
+    }
+
     that.exit = callback => {
         lib.ajax({
             s: 'traffic',
             a: 'exit',
             type: 'GET',
             data: {
-                traffic: {id_traffic: that.id_traffic}
+                traffic: {
+                    id_traffic: that.id_traffic
+                },
+                amount_parking: vehicleView.vehicles[config.cache.id_vehicle].amount_parking
             },
         }, (response) => {
             response.status && that.set(response.traffic)

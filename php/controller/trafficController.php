@@ -60,14 +60,17 @@ class trafficController extends controller {
     }
 
     /**
-     * Metodo retorna todos os traffics ativos nas vagas
+     * Metodo retorna todos os traffics ativos
      */
     public function getUsingTraffics ()
     {
+        //DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s') 
         return sql::select(
-            "SELECT a.*, b.model, b.license_plate FROM traffics a
+            "SELECT a.id_traffic, a.id_vehicle, a.id_client, DATE_FORMAT(a.entrance, '%d/%m/%Y %H:%I:%S') as entrance, 
+            DATE_FORMAT(a.departure, '%d/%m/%Y %H:%I:%S') as departure, stay_time, a.price, a.payed, a.parking_space, b.model, b.license_plate 
+            FROM traffics a
             INNER JOIN vehicles b on a.id_vehicle = b.id_vehicle
-            WHERE a.departure is null and payed = 0",
+            WHERE payed = 0",
             []
         );
     }
@@ -116,14 +119,31 @@ class trafficController extends controller {
     /**
      * Metodo retorna o traffic atual na memoria completo do banco
      */
-    public function getTraffic()
+    public function getTraffic ()
     {
         return sql::select(
-            "SELECT *, b.model, b.license_plate FROM traffics a
+            "SELECT a.id_traffic, a.id_vehicle, a.id_client, DATE_FORMAT(a.entrance, '%d/%m/%Y %H:%I:%S') as entrance, 
+            DATE_FORMAT(a.departure, '%d/%m/%Y %H:%I:%S') as departure, stay_time, a.price, a.payed, a.parking_space, b.model, b.license_plate 
+            FROM traffics a
             INNER JOIN vehicles b on a.id_vehicle = b.id_vehicle
             WHERE a.id_traffic = :id",
             ['id' => $this->id]
         )[0];
+    }
+
+    /**
+     * Metodo realiza o pagamento de uma vaga de estacionamento no banco de dados
+     */
+    public function pay ()
+    {
+        $result = sql::update(
+            'traffics',
+            'payed = 1',
+            'id_traffic = :id_traffic',
+            ['id_traffic' => $this->id]
+        );
+
+        if ($result) return lib::$return['status'] = true;
     }
 
     /**
@@ -141,6 +161,34 @@ class trafficController extends controller {
         }
 
         return false;
+    }
+
+    /**
+     * Metodo realiza a saida de um veiculo na vaga e gera o valor a ser pago
+     * Caso seja a 11 vez do veiculo, ele gera o valor zero
+     */
+    public function updateDeparture ()
+    {   
+        $price = "(((SELECT hour_value FROM configs WHERE id_config = 1) / 60) /60) * TIME_TO_SEC(stay_time)";
+        
+        if (lib::$data->data->amount_parking % 11 === 0) {
+            $price = 0;
+        }
+
+        $result = sql::update(
+            'traffics',
+            "departure = CURRENT_TIMESTAMP, stay_time = SEC_TO_TIME(TIMESTAMPDIFF(SECOND,traffics.entrance, traffics.departure)), 
+            price = $price",
+            'id_traffic = :id_traffic',
+            ['id_traffic' => $this->id]
+        );
+        
+        if (!$result) {
+            lib::$return['err'] = 'Ocorreu um erro ao gerar a baixa no estacionamento';
+            return false;   
+        }
+
+        return true;
     }
     
     /**

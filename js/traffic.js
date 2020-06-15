@@ -1,6 +1,7 @@
 const traffic = () => {
     const that = {}
     that.traffics = []
+    that.pendencys = []
 
     that.updateParkingAmounts = () => {
         let total = config.getParkingSpace()
@@ -15,7 +16,7 @@ const traffic = () => {
     }
 
     that.changeColorSpot = spot => {
-        const tr = document.querySelector(`tr[formspot="${spot}"]`)
+        const tr = document.querySelector(`#table_parking tr[formspot="${spot}"]`)
 
         if (that.traffics[spot]) {
             tr.classList.add('table-danger')
@@ -31,6 +32,8 @@ const traffic = () => {
     that.fillForm = () => {
         const spot = config.cache.id_traffic
         const traffic = that.traffics[spot]
+        z('form_search').style.display = 'none'
+        z('form_search_vehicle').style.display = 'none'
         
         if (traffic === undefined) {
             config.enableForm().all()
@@ -58,7 +61,7 @@ const traffic = () => {
         tr.classList.remove('table-success')
         
         //Elimino a cor ocupada da vaga anterior
-        if (config.cache.id_traffic) {
+        if (config.cache.id_traffic && config.cache.id_traffic != spot) {
             that.changeColorSpot(config.cache.id_traffic)
             
             that.traffics[config.cache.id_traffic] && that.cleanForm()
@@ -124,7 +127,7 @@ const traffic = () => {
         const line = document.querySelector(`tr[formspot="${traffic.parking_space}"]`)
         line.childNodes[1].textContent = traffic.model ? traffic.model.toUpperCase() : ''
         line.childNodes[2].textContent = traffic.license_plate ? traffic.license_plate.toUpperCase() : ''
-        line.childNodes[3].textContent = traffic.entrance ? lib.formatDate(traffic.entrance) : ''
+        line.childNodes[3].textContent = traffic.entrance ? traffic.entrance : ''
     }
 
     that.newTraffic = () => {
@@ -132,7 +135,6 @@ const traffic = () => {
 
         let data = {
             vehicle: {
-                id_vehicle: config.cache.id_vehicle ? config.cache.id_vehicle : null,
                 license_plate: config.form.license_plate.value.trim(),
                 model: config.form.model.value.trim()
             },
@@ -170,7 +172,7 @@ const traffic = () => {
 
             if (response.status === false) {
                 that.traffics[spot] = undefined
-                return alert(response.err)
+                return bootbox.alert(response.err)
             }
             
             vehicleView.vehicles[response.vehicle].amount_parking++
@@ -181,11 +183,57 @@ const traffic = () => {
     }
 
     /**
+     * Cria a linha para a tabela de pendencias
+     * @param {object} traffic 
+     */
+    that.createPendencyLine = (traffic) => {
+        const tr = document.createElement('tr')
+        tr.setAttribute('class', 'table-danger')
+        tr.setAttribute('id_traffic', traffic.id_traffic)
+        
+        const plate = document.createElement('td')
+        plate.textContent = traffic.license_plate
+        tr.append(plate)
+        
+        const entrance = document.createElement('td')
+        entrance.textContent = traffic.entrance
+        tr.append(entrance)
+
+        const departure = document.createElement('td')
+        departure.textContent = traffic.departure
+        tr.append(departure)
+
+        const stay_time = document.createElement('td')
+        stay_time.textContent = traffic.stay_time
+        tr.append(stay_time)
+        
+        const price = document.createElement('td')
+        price.setAttribute('class', 'text-success')
+        price.textContent = traffic.price
+        tr.append(price)
+
+        return tr
+    }
+
+    that.fillPendencysTable = (pendencys = that.pendencys) => {
+        const table = z('table_parking_payment')
+
+        pendencys.forEach(el => {
+            const tr = that.createPendencyLine(el)
+            table.appendChild(tr)
+        })
+    }
+
+    /**
      * Metodo pega todos os traffics no array, instancia os objetos e atualiza a tela
      * @param {arry} traffics 
      */
     that.fillObjectInTable = traffics => {
         traffics.forEach(el => {
+            if (el.departure) {
+                return that.pendencys[el.id_traffic] = new objTraffic(el)
+            }
+
             const spot = el.parking_space
             
             that.traffics[spot] = new objTraffic(el)
@@ -193,6 +241,7 @@ const traffic = () => {
             that.changeColorSpot(spot)
         })
 
+        that.fillPendencysTable()
         that.updateParkingAmounts()
     }
 
@@ -210,9 +259,7 @@ const traffic = () => {
         })
     }
 
-    that.removeTraffic = e => {
-        const spot = config.cache.id_traffic
-        
+    that.removeTrafficInUse = (spot) => {
         that.traffics[spot].delete(response => {
             if (response.status) {
                 vehicleView.vehicles[that.traffics[spot].id_vehicle].amount_parking--
@@ -220,10 +267,37 @@ const traffic = () => {
                 that.updateTrafficLine({parking_space: spot})
                 that.cleanForm()
                 that.changeColorSpot(spot)
-                config.cache.clear()
-                that.updateParkingAmounts()
+                return that.updateParkingAmounts()
             }
+
+            bootbox.alert(response.err)
         })
+    }
+
+    that.removeTrafficPendency = (id_traffic) => {
+        that.pendencys[id_traffic].delete(response => {
+            if (response.status) {
+                vehicleView.vehicles[that.pendencys[id_traffic].id_vehicle].amount_parking--
+                that.pendencys[id_traffic] = undefined
+                that.cleanForm()
+
+                const tr = document.querySelector(`#table_parking_payment tr[id_traffic="${id_traffic}"]`)
+                return tr.remove()
+            }
+
+            bootbox.alert(response.err)
+        })
+    }
+
+    that.removeTraffic = () => {
+        const spot = config.cache.id_traffic
+        const  opt = z('option_parking').getValue()
+
+        if (opt === "1") {
+            return that.removeTrafficInUse(spot)
+        }
+
+        return that.removeTrafficPendency(spot)
     }
 
     /**
@@ -232,23 +306,129 @@ const traffic = () => {
     that.showPendency = () => {
         const  opt = z('option_parking').getValue()
         
-        if (opt === '1') {
+        if (opt === '1') { // ver as vagas de estacionamento
+            if (config.cache.id_traffic) {
+                const tr = document.querySelector(`#table_parking_payment tr[id_traffic="${config.cache.id_traffic}"]`)
+                tr.classList.remove('table-success')
+                tr.classList.add('table-danger')
+            }
+
+            that.cleanForm()
             z('table_parking_view').classList.remove('hide-screen')
             return z('table_payment_view').classList.add('hide-screen')
         }
+        
+        if (config.cache.id_traffic) {
+            const tr = document.querySelector(`#table_parking tr[formspot="${config.cache.id_traffic}"]`)
+            tr.classList.add('table-success')
+            tr.classList.remove('table-danger')
+        }
 
+        that.cleanForm()
+        config.disableForm().all()
+        z('btn_new_traffic').classList.add('hide-screen')
+        z('btn_edit_traffic').classList.remove('hide-screen')
         z('table_payment_view').classList.remove('hide-screen')
         z('table_parking_view').classList.add('hide-screen')
     }
 
+    /**
+     * Cria a tela de recebimento
+     * @param {object} traffic 
+     * @param {evento de callback} callback 
+     */
+    that.makeViewPayment = (traffic, callback) => {
+        bootbox.confirm({
+            title: `<p>Veículo:${traffic.model}</p> <p>Placa:${traffic.license_plate}</p>`,
+            message: `<p>Entrada:<span class='text-primary'>${traffic.entrance}</span></p><p>Saída:<span class='text-warning'>${traffic.departure}</span></p><p>Permanência:<span class='text-danger'>${traffic.stay_time}</span></p><p>Valor:<span class='text-success' style='font-size: 30px;'>R$${traffic.price}</span></p><p class='text-info'>Quantidade:${vehicleView.vehicles[traffic.id_vehicle].amount_parking}</p>`,
+            size: 'large',
+            buttons: {
+                confirm: {
+                    label: "Confirmar Recebimento",
+                    className: 'btn-success',
+                },
+                cancel: {
+                    label: "Receber mais tarde",
+                    className: 'btn-danger',
+                },
+            },
+            callback: function (result) {
+                callback && callback(result)
+            }
+        });
+    }
+
+    /**
+     * Metodo realiza a baixa do veiculo na vaga
+     */
     that.exitTraffic = () => {
-        that.traffics[config.cache.id_traffic].exit(responde => {
+        const  opt = z('option_parking').getValue()
+        
+        if (opt === "2") {
+            that.pendencys[config.cache.id_traffic].pay()
+            const tr = document.querySelector(`#table_parking_payment tr[id_traffic="${config.cache.id_traffic}"]`)
+            tr.remove()
+            that.pendencys[config.cache.id_traffic] = undefined
+            return that.cleanForm()
+        }
+
+        that.traffics[config.cache.id_traffic].exit(response => {
             if (!response.status) {
-                return alert(response.err)
+                return bootbox.alert(response.err)
             }
 
+            that.makeViewPayment(response.traffic, result => {
+                const spot = response.traffic.parking_space
+                
+                that.updateTrafficLine({parking_space: spot})
+                that.cleanForm() //ja limpa o cache
 
+                if (result === true) {    
+                    that.traffics[spot].pay()
+                    that.traffics[spot] = undefined
+                    that.changeColorSpot(spot)
+                    return that.updateParkingAmounts()
+                }
+                
+                that.traffics[spot] = undefined
+                that.changeColorSpot(spot)
+                that.updateParkingAmounts()
+                that.fillPendencysTable([response.traffic])
+                that.pendencys[response.traffic.id_traffic] = new objTraffic(response.traffic)
+            })
         })
+    }
+
+    that.fillPendencyForm = () => {
+        const id_traffic = config.cache.id_traffic
+        const traffic = that.pendencys[id_traffic]
+        z('form_search').style.display = 'none'
+        z('form_search_vehicle').style.display = 'none'
+        
+        vehicleView.fillFormVehicle(traffic.id_vehicle)
+        clientView.fillFormClient(traffic.id_client)
+    }
+
+    that.showPaymentForm = e => {
+        const tr = e.target.parentNode
+        const id_traffic = tr.getAttribute('id_traffic')
+        
+        tr.classList.add('table-success')
+        tr.classList.remove('table-danger')
+        
+        //Elimino a cor da pendency anterior
+        if (config.cache.id_traffic && config.cache.id_traffic != id_traffic) {
+            const oldTr = document.querySelector(`#table_parking_payment tr[id_traffic="${config.cache.id_traffic}"]`)
+            oldTr.classList.add('table-danger')
+            oldTr.classList.remove('table-success')
+            
+            that.cleanForm()
+        }
+
+        config.cache.id_traffic = id_traffic
+
+         that.fillPendencyForm()
+         z('view_form_parking').classList.remove('hide-screen')
     }
 
     /**
@@ -261,6 +441,7 @@ const traffic = () => {
             that.getUsingTraffics()
         })
 
+        z('table_parking_payment', that.showPaymentForm)
         z('table_parking', that.fillSpot)
         z('option_parking', that.showPendency, 'change')
         z('form_parking_pay', that.exitTraffic)

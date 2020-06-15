@@ -1,6 +1,7 @@
 const objConfig = function() {
     const that = {}
     
+    that.dialog
     let parkingSpace = null
     let hourValue = null
     let prefix = null
