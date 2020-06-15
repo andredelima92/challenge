@@ -1,15 +1,53 @@
 <?php
 
 class traffic {
+    private $traffic;
+
+    public function __construct()
+    {
+        $traffic = null;
+        
+        if (!empty(lib::$data->data->traffic)) {
+            $traffic = lib::$data->data->traffic;
+        }
+        
+        $this->traffic = new trafficController($traffic);
+    }
 
     /**
      * Metodo solicita todos os traffics em uso
      */
     public function getUsingTraffics ()
     {
-        $traffic = new trafficController();
+        return lib::$return = ['status' => true, 'traffics' => $this->traffic->getUsingTraffics()];
+    }
 
-        return lib::$return = ['status' => true, 'traffics' => $traffic->getUsingTraffics()];
+    /**
+     * Metodo realiza o procedimento de dar baixa em um veiculo em uma vaga
+     */
+    public function exit ()
+    {
+        if ($this->traffic->updateDeparture() === false) {
+            return false;
+        }
+
+        return lib::$return = ['status' => true, 'traffic' => $this->traffic->getTraffic()];
+    }
+
+    /**
+     * Metodo realiza o pagamento de uma vaga de estacionamento
+     */
+    public function pay ()
+    {
+        return $this->traffic->pay();
+    }
+
+    /**
+     * Exclui um traffic uma vaga de veiculo
+     */
+    public function removeTraffic () 
+    {
+        return $this->traffic->delete('traffic');
     }
 
     /**
@@ -21,20 +59,19 @@ class traffic {
     {
         $client = new clientController(lib::$data->data->client);
         $vehicle = new vehicleController(lib::$data->data->vehicle);
-        $traffic = new trafficController(lib::$data->data->traffic);
         $config = new configController;
         
-        $diff = $config->parking_space - $traffic->parking_space;
+        $diff = $config->parking_space - $this->traffic->parking_space;
         
-        if ($diff < 0 || $traffic->parking_space <= 0) {
-            lib::$return = ['status' => false, 'err' => 'Vaga de estacionamento inexistente'];
+        if ($diff < 0 || $this->traffic->parking_space <= 0) {
+            lib::$return['err'] = 'Vaga de estacionamento inexistente';
             return false;
         }
 
-        $free = $traffic->spotIsFree($traffic->parking_space);
+        $free = $this->traffic->spotIsFree($this->traffic->parking_space);
 
         if ($free === false) {
-            lib::$return = ['status' => false, 'err' => 'Vaga de estacionamento ocupada'];
+            lib::$return['err'] = 'Vaga de estacionamento ocupada';
             return false;
         }
         
@@ -42,7 +79,7 @@ class traffic {
             return false;
         }
 
-        if ($traffic->isBusy($vehicle->license_plate) === true) {
+        if ($this->traffic->isBusy($vehicle->license_plate) === true) {
             return false;
         }
 
@@ -58,14 +95,14 @@ class traffic {
 
         lib::$return['vehicle'] = $vehicle->getId();
 
-        $traffic->setClient($client->getId());
-        $traffic->setVehicle($vehicle->getId());
+        $this->traffic->setClient($client->getId());
+        $this->traffic->setVehicle($vehicle->getId());
         
-        $result = $traffic->insertOrUpdate();
+        $result = $this->traffic->insertOrUpdate();
         
         if ($result === false) return false;
         
         lib::$return['status'] = true;
-        return lib::$return['traffic'] = $traffic->getTraffic();
+        return lib::$return['traffic'] = $this->traffic->getTraffic();
     }
 }

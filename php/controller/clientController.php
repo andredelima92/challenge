@@ -2,8 +2,7 @@
 
 class clientController extends controller {
     protected $id = null;
-    private $name = null;
-    private $amount_parking = null;
+    private $name = null;    
     private $phone = null;
 
     public function __construct($client = null)
@@ -14,10 +13,6 @@ class clientController extends controller {
 
         if (!empty($client->name)) {
             $this->name = $client->name;
-        }
-         
-        if (!empty($client->amount_parking)) {
-            $this->amount_parking = $client->amount_parking;
         }
 
         if (!empty($client->phone)) {
@@ -47,13 +42,11 @@ class clientController extends controller {
     private function validateClient () 
     {
         if (empty($this->name)) {
-            lib::$return['status'] = false;
             lib::$return['err'] = 'Nome do cliente não pode estar em branco';
             return false;
         }
 
         if ($this->validPhone($this->phone) === false) {
-            lib::$return['status'] = false;
             lib::$return['err'] = 'Telefone do cliente inválido';
             return false;
         }
@@ -76,7 +69,6 @@ class clientController extends controller {
         );
 
         if ($result === false) {
-            lib::$return['status'] = false;
             lib::$return['err'] = 'Ocorreu um erro ao atualizar o cliente';
             return false;
         }
@@ -96,7 +88,6 @@ class clientController extends controller {
         );
 
         if ($result === false) {
-            lib::$return['status'] = false;
             lib::$return['err'] = 'Ocorreu um erro ao inserir o cliente';
             return false;
         }

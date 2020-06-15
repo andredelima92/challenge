@@ -1,14 +1,13 @@
 const objVehicle= function (vehicle)  {
     const that = {}
-    
-    that.id_vehicle= vehicle.id_vehicle ? vehicle.id_vehicle : null
-    that.model = vehicle.model ? vehicle.model : null
-    that.license_plate = vehicle.license_plate ? vehicle.license_plate : null
+
+    that.amount_parking = 0
 
     that.set = (vehicle) => {
-        that.id_vehicle = vehicle.id_vehicle ? vehicle.id_vehicle : that.id_vehicle
-        that.model = vehicle.model ? vehicle.model : that.model
-        that.license_plate = vehicle.license_plate ? vehicle.license_plate : that.license_plate
+        that.id_vehicle = vehicle.id_vehicle ? vehicle.id_vehicle : ''
+        that.model = vehicle.model ? vehicle.model : ''
+        that.amount_parking = vehicle.amount_parking ? vehicle.amount_parking : that.amount_parking
+        that.license_plate = vehicle.license_plate ? vehicle.license_plate : ''
     }
 
     that.update = (data, callback) => {
@@ -26,9 +25,10 @@ const objVehicle= function (vehicle)  {
     /**
      * Metodo construct
      */
-    that.init = () => {
+    that.init = (vehicle) => {
+        that.set(vehicle)
         return that
     }
 
-    return that.init()
+    return that.init(vehicle)
 }

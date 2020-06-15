@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="./css/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="./js/bootbox.js" crossorigin="anonymous"></script>
+    <script src="./js/font.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="./css/style.css">
     <title>Document</title>
@@ -53,13 +55,13 @@
                         <div class="form-group row">
                             <span class="navbar-brand" href="#parking" style="color: rgb(143,209,158); font-weight: 900;">VAGAS DISPONÍVEIS:<span class="badge badge-light" id="freeAmount"></span></span>
                             <span class="navbar-brand" href="#parking" style="color: rgb(216, 160, 166); font-weight: 900;">VAGAS OCUPADAS:<span class="badge badge-light" id="busyAmount"></span></span>
-                            <select class="select-parking">
-                              <option>VAGAS</option>
-                              <option>PENDÊNCIAS</option>
+                            <select class="select-parking" id="option_parking">
+                              <option value="1">VAGAS</option>
+                              <option value="2">PENDÊNCIAS</option>
                             </select>
                         </div>
                         <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                            <table class="table table-hover table-bordered">
+                            <table class="table table-hover table-bordered" id="table_parking_view">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>
@@ -79,6 +81,30 @@
                                 <tbody id="table_parking"></tbody>
                             </table>
                         </div>
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                            <table class="table table-hover table-bordered hide-screen" id="table_payment_view">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>
+                                            PLACA
+                                        </th>
+                                        <th>
+                                            ENTRADA
+                                        </th>
+                                        <th>
+                                            SAIDA
+                                        </th>
+                                        <th>
+                                            ESTADIA
+                                        </th>
+                                        <th>
+                                            VALOR
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table_parking_payment"></tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="hide-screen" id="view_form_parking">
@@ -86,7 +112,7 @@
                                 <div class="form-group">
                                     
                                     <label for="license_plate">
-                                        Placa do Veiculo
+                                        Placa do Veiculo <span class="badge badge-success" id="form_amount_parking">0</span>
                                     </label>
                                     <input type="text" class="form-control" id="form_parking_license_plate" maxlength="7">
                                     <table class="table table-hover table-borderless table-search hide-screen" id="form_search_vehicle">
@@ -110,7 +136,7 @@
                                 <div class="form-group">
                                     
                                     <label for="name">
-                                        Proprietário <span class="badge badge-success" id="form_amount_parking">0</span>
+                                        Proprietário
                                     </label>
                                     <input type="text" class="form-control" id="form_parking_name" maxlength="255">
                                     <table class="table table-hover table-borderless table-search hide-screen" id="form_search">
@@ -139,12 +165,21 @@
                                         Cancelar
                                     </button>
                                 </div>
+                                <div id="btn_edit_traffic" class="hide-screen">
+                                    <button type="button" class="btn btn-success" id="form_parking_pay">
+                                       Baixar
+                                    </button>
+                                    <button type="button" class="btn btn-danger " id="form_parking_delete">
+                                        Excluir
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div id="dialog-confirm" title="Confirmar recebimento?"></div>
         <!-- <div class="row">
             <div class="col-md-6">
             </div>

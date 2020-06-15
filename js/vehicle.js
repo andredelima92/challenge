@@ -61,7 +61,7 @@ const vehicle = () => {
             return that.append(that.vehicles[vehicle.id_vehicle])
         }
         
-        that.vehicles[vehicle.id_vehicle] = vehicle
+        that.vehicles[vehicle.id_vehicle].set(vehicle)
     }
 
       /**
@@ -124,6 +124,7 @@ const vehicle = () => {
 
         config.form.license_plate.value = that.vehicles[id_vehicle].license_plate
         config.form.model.value = that.vehicles[id_vehicle].model
+        config.form.amount_parking.textContent = that.vehicles[id_vehicle].amount_parking
     }
 
     /**

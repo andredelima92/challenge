@@ -110,7 +110,7 @@ class lib
      */
     public static function returnData()
     {
-        $return = lib::$return;
+        $return = self::$return;
         
         if (empty($return)) {
             $return = [];
@@ -119,10 +119,6 @@ class lib
         if (empty($return['status'])) {
             $return['status'] = false;
         } 
-
-        if (!empty(self::$return['msg'])) {
-        	$return['msg'] = self::$return['msg'];
-        }
 
         echo json_encode($return);
     }
@@ -172,7 +168,7 @@ function dd($var = 'Without variable')
     #######################################################
     #                                                     #
     #                                                     #                                     
-    #                   SCHOOL DEBUG                      #
+    #                       DEBUG                         #
     #                                                     #
     #                                                     #  
     #######################################################<br><br>';
