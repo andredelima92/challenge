@@ -31,6 +31,53 @@ const objConfig = function() {
         }
     }
 
+    that.show = (screen = 'parking') => {
+        const oldScreen = document.querySelector('li.active').childNodes[1].getAttribute('id')
+        if (oldScreen === 'header_parking' && that.cache.id_traffic) {
+            trafficView.changeColorSpot(that.cache.id_traffic).renew()
+            trafficView.cleanForm()
+        }
+
+        if (screen === 'clients') {
+            z('header_parking').parentNode.classList.remove('active')
+            z('header_vehicles').parentNode.classList.remove('active')
+            z('header_clients').parentNode.classList.add('active')
+            
+            z('vw_traffics').classList.add('hide-screen')
+            z('vw_vehicles').classList.add('hide-screen')
+            z('vw_clients').classList.remove('hide-screen')
+            z('search_table_input').value = ''
+            z('form_client_name').value = ''
+            z('form_client_phone').value = ''
+        }
+        
+        if (screen === 'parking') {
+            z('header_parking').parentNode.classList.add('active')
+            z('header_vehicles').parentNode.classList.remove('active')
+            z('header_clients').parentNode.classList.remove('active')
+            
+            z('vw_traffics').classList.remove('hide-screen')
+            z('vw_vehicles').classList.add('hide-screen')
+            z('vw_clients').classList.add('hide-screen')
+        }
+
+        if (screen === 'vehicles') {
+            z('header_parking').parentNode.classList.remove('active')
+            z('header_vehicles').parentNode.classList.add('active')
+            z('header_clients').parentNode.classList.remove('active') 
+
+            z('vw_traffics').classList.add('hide-screen')
+            z('vw_vehicles').classList.remove('hide-screen')
+            z('vw_clients').classList.add('hide-screen')
+
+            z('search_table_vehicle_input').value = ''
+            z('form_vehicle_plate').value = ''
+            z('form_vehicle_model').value = ''
+        }
+
+        config.cache.clear()
+    }
+    
     that.enableForm = () => {
         return {
             client: () => {

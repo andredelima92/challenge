@@ -58,10 +58,18 @@ header {
     width: 350px
 }
 
+form label {
+    color: rgba(0, 0, 0, 0.555);
+    font-size: 22px;
+    /* font-weight: 200; */
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
 #form_search thead th {   
     padding: 3px;
     padding-right: 9px;
 }
+
 
 #form_search_vehicle thead th {
     padding: 3px;
