@@ -10,11 +10,11 @@ const objClient = function (client)  {
     that.update = (data, callback) => {
         lib.ajax({
             s: 'client',
-            a: 'update',
+            a: 'updt',
             type: 'GET',
             data,
         }, (response) => {
-            response.status && that.set(response.client)
+            response.status && that.set(data.client)
             callback && callback(response)
         })
     }

@@ -16,10 +16,6 @@ class clientController extends controller {
         }
 
         if (!empty($client->phone)) {
-            if (strlen($client->phone) > 0 && strlen($client->phone) < 10) {
-                $client->phone = '14' . $client->phone;
-            }
-
             $this->phone = $client->phone;
         }
     }
@@ -29,7 +25,7 @@ class clientController extends controller {
      */
     public function validPhone($phone)
     {
-        if (strlen($phone) > 0 && strlen($phone) < 10) {
+        if (strlen($phone) > 0 && strlen($phone) < 8) {
             return false;
         }
 
@@ -58,16 +54,16 @@ class clientController extends controller {
     /**
      * Metodo responsavel por alterar o cadastro de um cliente existente
      */
-    protected function update()
+    public function update()
     {
         if ($this->validateClient() === false) return false;
-
+        
         $result = sql::update('clients',
             'name = :name, phone = :phone', 
             'id_client = :id_client',
             ['name' => $this->name, 'phone' => $this->phone, 'id_client' => $this->id]
         );
-
+        
         if ($result === false) {
             lib::$return['err'] = 'Ocorreu um erro ao atualizar o cliente';
             return false;

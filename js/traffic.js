@@ -21,12 +21,18 @@ const traffic = () => {
         if (that.traffics[spot]) {
             tr.classList.add('table-danger')
             tr.classList.remove('table-success')
-            
-            return true
+        } else {
+            tr.classList.add('table-success')
+            tr.classList.remove('table-danger')
         }
 
-        tr.classList.add('table-success')
-        tr.classList.remove('table-danger')
+        return {
+            renew: () => {
+                if (that.traffics[spot]) return
+                tr.classList.remove('table-danger')
+                tr.classList.add('table-success')
+            }
+        }
     }
 
     that.fillForm = () => {
@@ -431,6 +437,10 @@ const traffic = () => {
          z('view_form_parking').classList.remove('hide-screen')
     }
 
+    that.headerTraffics = () => {
+        config.show()
+    }
+
     /**
      * Metodo construct
      */
@@ -441,6 +451,7 @@ const traffic = () => {
             that.getUsingTraffics()
         })
 
+        z('header_parking', that.headerTraffics)
         z('table_parking_payment', that.showPaymentForm)
         z('table_parking', that.fillSpot)
         z('option_parking', that.showPendency, 'change')

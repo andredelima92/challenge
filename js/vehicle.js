@@ -141,6 +141,10 @@ const vehicle = () => {
             that.fillTableForSearchTrafficVehicle()
         })
     }
+
+    that.headerVehicles = () => {
+        config.show('vehicles')
+    }
     
       /**
      * Metodo construct
@@ -148,6 +152,7 @@ const vehicle = () => {
     that.init = () => {
         that.getVehiclesToMemory()
 
+        z('header_vehicles', that.headerVehicles)
         z('form_parking_license_plate', that.formSearchVehicle, 'input')
         z('form_search_vehicle_body', that.selectVehicleFromSearch)
 
