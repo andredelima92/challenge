@@ -105,4 +105,24 @@ class traffic {
         lib::$return['status'] = true;
         return lib::$return['traffic'] = $this->traffic->getTraffic();
     }
+
+    public function getServer () 
+    {
+        $config = new configController;
+        lib::$return = ['status' => true, 'config' => $config->getConfig()];
+    }
+
+    public function updtConfig () 
+    {
+        $data = lib::$data->data->config;
+
+        if (!$data->parking_space || !$data->hour_value) {
+            return lib::$return = ['err' => 'Valores informados estão incorretos'];
+        }
+
+        $config = new configController($data);
+        if ($config->update() === true) {
+            return lib::$return = ['status' => true];
+        }
+    }
 }

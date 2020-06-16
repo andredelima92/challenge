@@ -32,7 +32,7 @@
                         
                         <ul class="navbar-nav ml-md-auto">
                             <li class="nav-item">
-                                 <a class="nav-link" href="#config">Configuração <span class="sr-only">(current)</span></a>
+                                 <a class="nav-link" href="#config" id="header_config">Configuração</a>
                             </li>
                             <li class="nav-item dropdown">
                                  <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown">Relatórios</a>
@@ -49,6 +49,29 @@
         </div>
         
         <div class="row lancamento screens">
+            <div class="col-md-12 hide-screen" id="vw_config">
+                <div class="col-sm-6">
+                    <form role="form overflow-auto force-overflow" autocomplete="off">
+                        <div class="form-group">
+                            <label for="name">
+                                Quantidade de vagas
+                            </label>
+                            <input type="number" class="form-control" id="form_config_space">
+                        </div>
+
+                        <div class="form-group">
+                            
+                            <label for="phone">
+                                Valor por hora
+                            </label>
+                            <input type="number" class="form-control" id="form_config_value">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="form_config_save">
+                            Salvar
+                        </button>
+                    </form>
+                </div>
+            </div>
             <div class="col-md-12 hide-screen"  id="vw_clients">
                 <div class="input-group" style="margin-bottom: 30px;">
                     <input type="text" class="form-control" aria-label="Pesquisa de cliente" placeholder="Nome do cliente ou telefone" id="search_table_input" autocomplete="off">

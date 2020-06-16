@@ -2,9 +2,8 @@ const objConfig = function() {
     const that = {}
     
     that.dialog
-    let parkingSpace = null
-    let hourValue = null
-    let prefix = null
+    let parkingSpace = 15
+    let hourValue = 15.50
 
     that.form = {
         license_plate: z('form_parking_license_plate'),
@@ -31,6 +30,28 @@ const objConfig = function() {
         }
     }
 
+    that.hide = () => {
+        const headers = [{header: 'header_parking', view: 'vw_traffics'}
+        , {header:'header_vehicles', view: 'vw_vehicles'}, {header:'header_config', view: 'vw_clients'},
+         {header:'header_clients', view: 'vw_config'}]
+
+        headers.forEach(el => {
+            z(el.header).parentNode.classList.remove('active')
+            z(el.view).classList.add('hide-screen')
+        })
+
+        return {
+            view: view => {
+                z(view).classList.remove('hide-screen')
+                return {
+                    header: header => {
+                        z(header).parentNode.classList.add('active')
+                    }
+                }
+            }
+        }
+    }
+
     that.show = (screen = 'parking') => {
         const oldScreen = document.querySelector('li.active').childNodes[1].getAttribute('id')
         if (oldScreen === 'header_parking' && that.cache.id_traffic) {
@@ -46,40 +67,26 @@ const objConfig = function() {
         }
 
         if (screen === 'clients') {
-            z('header_parking').parentNode.classList.remove('active')
-            z('header_vehicles').parentNode.classList.remove('active')
-            z('header_clients').parentNode.classList.add('active')
-            
-            z('vw_traffics').classList.add('hide-screen')
-            z('vw_vehicles').classList.add('hide-screen')
-            z('vw_clients').classList.remove('hide-screen')
+            that.hide().view('vw_clients').header('header_clients')
             z('search_table_input').value = ''
             z('form_client_name').value = ''
             z('form_client_phone').value = ''
         }
         
         if (screen === 'parking') {
-            z('header_parking').parentNode.classList.add('active')
-            z('header_vehicles').parentNode.classList.remove('active')
-            z('header_clients').parentNode.classList.remove('active')
-            
-            z('vw_traffics').classList.remove('hide-screen')
-            z('vw_vehicles').classList.add('hide-screen')
-            z('vw_clients').classList.add('hide-screen')
+            that.hide().view('vw_traffics').header('header_parking')
         }
 
         if (screen === 'vehicles') {
-            z('header_parking').parentNode.classList.remove('active')
-            z('header_vehicles').parentNode.classList.add('active')
-            z('header_clients').parentNode.classList.remove('active') 
-
-            z('vw_traffics').classList.add('hide-screen')
-            z('vw_vehicles').classList.remove('hide-screen')
-            z('vw_clients').classList.add('hide-screen')
-
+            that.hide().view('vw_vehicles').header('header_vehicles')
+            
             z('search_table_vehicle_input').value = ''
             z('form_vehicle_plate').value = ''
             z('form_vehicle_model').value = ''
+        }
+
+        if (screen === 'config')  {
+            that.hide().view('vw_config').header('header_config')
         }
 
         config.cache.clear()
@@ -135,11 +142,18 @@ const objConfig = function() {
     }
 
     that.getServer = (callback) => {
-        parkingSpace = 15
-        hourValue = 15.50
-        prefix = 14
-
-        callback && callback()
+        lib.ajax({
+            s: 'traffic',
+            a: 'getServer',
+            type: 'GET',
+            data: {},
+        }, (response) => {
+            parkingSpace = response.config.parking_space
+            hourValue = response.config.hour_value
+            z('form_config_space').value = parkingSpace
+            z('form_config_value').value = hourValue
+            callback && callback()
+        })
     }
 
      /**
@@ -159,12 +173,36 @@ const objConfig = function() {
         }
     }
 
+    that.update = () => {
+        lib.ajax({
+            s: 'traffic',
+            a: 'updtConfig',
+            type: 'GET',
+            data: {
+                config: {
+                    parking_space: z('form_config_space').value,
+                    hour_value: z('form_config_value').value
+                }
+            },
+        }, (response) => {
+            if (response.status === false) {
+               return bootbox.alert(response.err)
+            }
+            bootbox.alert('Informações alteradas com sucesso, o sistema sera reiniciado para entrarem em vigor', () => {
+                document.location.reload(false)
+            })
+        })
+    }
+
     /**
      * Metodo construct
      */
     let init = () => {
 
         that.makeCloseEvents()
+
+        z('header_config', () => that.show('config'))
+        z('form_config_save', that.update)
         return that
     }
 
