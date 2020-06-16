@@ -25,7 +25,6 @@ DROP TABLE IF EXISTS `clients`;
 CREATE TABLE `clients` (
   `id_client` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_swedish_ci NOT NULL,
-  `amount_parking` int(11) NOT NULL DEFAULT 0,
   `phone` varchar(11) COLLATE utf8_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`id_client`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -51,7 +50,6 @@ CREATE TABLE `configs` (
   `id_config` int(11) NOT NULL DEFAULT 1,
   `parking_space` int(11) NOT NULL,
   `hour_value` float(5,2) NOT NULL DEFAULT 0.00,
-  `prefix` int(11) NOT NULL DEFAULT 11,
   PRIMARY KEY (`id_config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -62,6 +60,7 @@ CREATE TABLE `configs` (
 
 LOCK TABLES `configs` WRITE;
 /*!40000 ALTER TABLE `configs` DISABLE KEYS */;
+INSERT INTO `configs` VALUES (1,15,15.50);
 /*!40000 ALTER TABLE `configs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -75,14 +74,18 @@ DROP TABLE IF EXISTS `traffics`;
 CREATE TABLE `traffics` (
   `id_traffic` int(11) NOT NULL AUTO_INCREMENT,
   `id_vehicle` int(11) NOT NULL,
-  `entrance` timestamp NOT NULL DEFAULT current_timestamp(),
-  `departure` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `id_client` int(11) NOT NULL,
+  `entrance` datetime NOT NULL DEFAULT current_timestamp(),
+  `departure` datetime DEFAULT NULL,
+  `stay_time` time DEFAULT NULL,
   `price` float(9,2) DEFAULT NULL,
   `payed` tinyint(1) NOT NULL DEFAULT 0,
   `parking_space` int(11) NOT NULL,
   PRIMARY KEY (`id_traffic`),
+  KEY `fk_client_traffics` (`id_client`),
   KEY `fk_vehicles_traffics` (`id_vehicle`),
-  CONSTRAINT `fk_vehicles_traffics` FOREIGN KEY (`id_vehicle`) REFERENCES `vehicles` (`id_vehicle`)
+  CONSTRAINT `fk_client_traffics` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_vehicles_traffics` FOREIGN KEY (`id_vehicle`) REFERENCES `vehicles` (`id_vehicle`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -94,6 +97,46 @@ LOCK TABLES `traffics` WRITE;
 /*!40000 ALTER TABLE `traffics` DISABLE KEYS */;
 /*!40000 ALTER TABLE `traffics` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER traffics_after_insert 
+AFTER INSERT ON traffics
+FOR EACH ROW BEGIN
+   UPDATE vehicles SET amount_parking = amount_parking + 1
+   WHERE id_vehicle = NEW.id_vehicle;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER traffics_after_delete 
+AFTER DELETE ON traffics
+FOR EACH ROW BEGIN
+   UPDATE vehicles SET amount_parking = amount_parking - 1
+   WHERE id_vehicle = OLD.id_vehicle;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `vehicles`
@@ -104,12 +147,11 @@ DROP TABLE IF EXISTS `vehicles`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vehicles` (
   `id_vehicle` int(11) NOT NULL AUTO_INCREMENT,
-  `id_client` int(11) NOT NULL,
   `model` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `amount_parking` int(11) NOT NULL DEFAULT 0,
   `license_plate` varchar(7) COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`id_vehicle`),
-  KEY `fk_client_vehicles` (`id_client`),
-  CONSTRAINT `fk_client_vehicles` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON DELETE CASCADE ON UPDATE CASCADE
+  UNIQUE KEY `license_plate` (`license_plate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -131,4 +173,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-11  1:02:36
+-- Dump completed on 2020-06-16  3:54:11
