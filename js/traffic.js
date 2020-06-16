@@ -161,19 +161,23 @@ const traffic = () => {
         that.traffics[spot].insert(data, response => {
             
             if (response.client) {
-                clientView.updateLocalObject({
+                const client = {
                     id_client: response.client,
                     name: data.client.name,
-                    phone: data.client.phone,
-                })
+                    phone: data.client.phone
+                }
+                clientView.updateLocalObject(client)
+                clientView.append(client, 'table_clients')
             }
 
             if (response.vehicle) {
-                vehicleView.updateLocalObject({
+                const vehicle = {
                     id_vehicle: response.vehicle,
                     license_plate: data.vehicle.license_plate,
-                    model: data.vehicle.model,
-                })
+                    model: data.vehicle.model
+                }
+                vehicleView.updateLocalObject(vehicle)
+                vehicleView.append(vehicle, 'table_vehicles')
             }
 
             if (response.status === false) {

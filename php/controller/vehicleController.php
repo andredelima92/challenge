@@ -39,11 +39,19 @@ class vehicleController extends controller {
         return true;
     }
 
-    protected function update()
+    public function update()
     {
-        $result = sql::update('vehicles', 'model = :model', 'license_plate = :license_plate',
+        $result = false;
+
+        if ($this->id) {
+            $result = sql::update('vehicles', 'model = :model, license_plate = :license_plate', 'id_vehicle = :id_vehicle',
+                            ['model' => $this->model, 'license_plate' => $this->license_plate, 'id_vehicle' => $this->id]
+            );
+        } else {
+            $result = sql::update('vehicles', 'model = :model', 'license_plate = :license_plate',
                             ['model' => $this->model, 'license_plate' => $this->license_plate]
-        );  
+            );
+        }
         
         if ($result === false) {
             lib::$return['status'] = false;

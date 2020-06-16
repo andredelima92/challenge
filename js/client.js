@@ -29,7 +29,7 @@ const client = () => {
     }
 
       /**
-     * Metodo cria a table usada para pesquisa dos clientes ao incluir um traffic
+     * Metodo cria a table usada para pesquisa dos clientes na tela de clientes
      */
     that.fillTableForSearchClient = () => {
         const table = z('table_clients')
@@ -192,7 +192,8 @@ const client = () => {
             const tr = document.querySelector(`#table_clients tr[id_client="${config.cache.id_client}"]`)
             tr.childNodes[0].textContent = that.clients[config.cache.id_client].name
             tr.childNodes[1].textContent = that.clients[config.cache.id_client].phone
-            
+            that.append(that.clients[config.cache.id_client], 'form_search_body')
+
             bootbox.alert('Cliente atualizado com sucesso!')
         })
     }

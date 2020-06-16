@@ -13,11 +13,11 @@ const objVehicle= function (vehicle)  {
     that.update = (data, callback) => {
         lib.ajax({
             s: 'vehicle',
-            a: 'update',
+            a: 'updt',
             type: 'GET',
             data,
         }, (response) => {
-            response.status && that.set(response.vehicle)
+            response.status && that.set(data.vehicle)
             callback && callback(response)
         })
     }

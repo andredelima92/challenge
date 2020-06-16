@@ -34,7 +34,14 @@ const objConfig = function() {
     that.show = (screen = 'parking') => {
         const oldScreen = document.querySelector('li.active').childNodes[1].getAttribute('id')
         if (oldScreen === 'header_parking' && that.cache.id_traffic) {
-            trafficView.changeColorSpot(that.cache.id_traffic).renew()
+                if (z('option_parking').getValue() === '1') {
+                    trafficView.changeColorSpot(that.cache.id_traffic).renew()
+                } else {
+                    const tr = document.querySelector(`#table_parking_payment tr[id_traffic="${config.cache.id_traffic}"]`)
+                    tr.classList.remove('table-success')
+                    tr.classList.add('table-danger')
+                }
+            
             trafficView.cleanForm()
         }
 
