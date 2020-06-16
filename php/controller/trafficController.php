@@ -211,15 +211,14 @@ class trafficController extends controller {
         return true;
     }
 
-    public function reportTraffics ($data1, $data2) {        
+    public function reportTraffics ($date1, $date2) {        
         return sql::select(
-            "SELECT b.license_plate, b.model, SUM(a.price) as totalPrice
+            "SELECT b.license_plate, b.model, SUM(a.price) as price
             FROM traffics a
             INNER JOIN vehicles b on a.id_vehicle = b.id_vehicle
-            GROUP BY a.id_vehicle
-            WHERE a.entrance BETWEEN :data1 AND :data2",
-            ['data1' => $data1, 'data2' => $data2]
-            
+            WHERE a.entrance BETWEEN :data1 AND :data2
+            GROUP BY a.id_vehicle",
+            ['data1' => $date1, 'data2' => $date2]
         );
     }
 }

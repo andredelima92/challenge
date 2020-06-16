@@ -445,6 +445,41 @@ const traffic = () => {
         config.show()
     }
 
+    that.reportTraffics = () => {
+        const date = {
+            date1: z('input_date1').value,
+            date2: z('input_date2').value
+        }
+
+        if (!date.date1 || !date.date2) {
+            return bootbox.alert('Informe as duas datas para gerar o relatório')
+        }
+
+        const table = z('table_report_traffics')
+        z('totalSpanReportTraffics').textContent = ''
+        table.innerHTML = '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>'
+        let html = ''
+        let total = 0
+
+        lib.ajax({
+            s: 'report',
+            a: 'totalTrafficsByData',
+            type: 'GET',
+            data: {date},
+        }, (response) => {
+            response.traffics.forEach(traffic => {
+                total += parseFloat(traffic.price)
+                html += `<tr>
+                            <td>${traffic.license_plate}</td>
+                            <td>${traffic.model}</td>
+                            <td class="text-success">R$${traffic.price}</td>
+                        </tr>`
+            })
+            table.innerHTML = html
+            z('totalSpanReportTraffics').textContent = `R$${total}`
+        })
+    }
+
     /**
      * Metodo construct
      */
@@ -455,6 +490,8 @@ const traffic = () => {
             that.getUsingTraffics()
         })
 
+        z('do_report_traffics', that.reportTraffics)
+        z('reportTraffics', () => config.show('reportTraffics'))
         z('header_parking', that.headerTraffics)
         z('table_parking_payment', that.showPaymentForm)
         z('table_parking', that.fillSpot)

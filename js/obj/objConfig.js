@@ -33,7 +33,8 @@ const objConfig = function() {
     that.hide = () => {
         const headers = [{header: 'header_parking', view: 'vw_traffics'}
         , {header:'header_vehicles', view: 'vw_vehicles'}, {header:'header_config', view: 'vw_clients'},
-         {header:'header_clients', view: 'vw_config'}, {header: 'reportBestClients',view: 'vw_report_clients'}]
+         {header:'header_clients', view: 'vw_config'}, {header: 'reportBestClients',view: 'vw_report_clients'},
+        {header: 'reportTraffics',view: 'vw_report_traffics'}]
 
         headers.forEach(el => {
             z(el.header).parentNode.classList.remove('active')
@@ -53,7 +54,12 @@ const objConfig = function() {
     }
 
     that.show = (screen = 'parking') => {
-        const oldScreen = document.querySelector('li.active').childNodes[1].getAttribute('id')
+        const li = document.querySelector('li.active')
+        let oldScreen = ''
+        if (li !== null) {
+            oldScreen = li.childNodes[1].getAttribute('id')
+        } 
+        
         if (oldScreen === 'header_parking' && that.cache.id_traffic) {
                 if (z('option_parking').getValue() === '1') {
                     trafficView.changeColorSpot(that.cache.id_traffic).renew()
@@ -66,31 +72,37 @@ const objConfig = function() {
             trafficView.cleanForm()
         }
 
-        if (screen === 'clients') {
-            that.hide().view('vw_clients').header('header_clients')
-            z('search_table_input').value = ''
-            z('form_client_name').value = ''
-            z('form_client_phone').value = ''
-        }
-        
-        if (screen === 'parking') {
-            that.hide().view('vw_traffics').header('header_parking')
-        }
-
-        if (screen === 'vehicles') {
-            that.hide().view('vw_vehicles').header('header_vehicles')
+        switch(screen){
+            case 'clients':
+                that.hide().view('vw_clients').header('header_clients')
+                z('search_table_input').value = ''
+                z('form_client_name').value = ''
+                z('form_client_phone').value = ''
+                break
             
-            z('search_table_vehicle_input').value = ''
-            z('form_vehicle_plate').value = ''
-            z('form_vehicle_model').value = ''
-        }
+            case 'parking': 
+                that.hide().view('vw_traffics').header('header_parking')
+                break
 
-        if (screen === 'config')  {
-            that.hide().view('vw_config').header('header_config')
-        }
+            case 'vehicles':
+                that.hide().view('vw_vehicles').header('header_vehicles')
+                z('search_table_vehicle_input').value = ''
+                z('form_vehicle_plate').value = ''
+                z('form_vehicle_model').value = ''
+                break
 
-        if (screen === 'reportClients') {
-            that.hide().view('vw_report_clients');
+            case 'config':
+                that.hide().view('vw_config').header('header_config')
+                break
+
+            case 'reportClients':
+                that.hide().view('vw_report_clients');
+                break
+
+            case 'reportTraffics':
+                that.hide().view('vw_report_traffics')
+                z('table_report_traffics').innerHTML = ''
+                break
         }
 
         config.cache.clear()
