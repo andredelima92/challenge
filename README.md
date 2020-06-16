@@ -1,4 +1,4 @@
-# challenge
+# Sistema para controle de clientes e veículos em estacionamentos
 
 Configurar as informações do banco de dados:
 # php/config.php
