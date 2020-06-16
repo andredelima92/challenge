@@ -212,12 +212,37 @@ const client = () => {
         config.show('clients')
     }
 
+    that.headerReportClients = () => {
+        const table = z('table_report_clients')
+        table.innerHTML = '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>'
+        config.show('reportClients')
+        let html = ''
+
+        lib.ajax({
+            s: 'report',
+            a: 'bestClients',
+            type: 'GET',
+            data: {},
+        }, (response) => {
+            response.clients.forEach(client => {
+                html += `<tr>
+                            <td>${client.name}</td>
+                            <td>${client.phone ? client.phone : ''}</td>
+                            <td>${client.total}</td>
+                        </tr>`
+            })
+            table.innerHTML = html
+            z('totalSpanReportClients').textContent = response.clients.length
+        })
+    }
+
       /**
      * Metodo construct
      */
     that.init = () => {
         that.getClientsToMemory()
 
+        z('reportBestClients', that.headerReportClients)
         z('header_clients', that.headerClients)
         z('search_table_input', that.searchClientTable, 'input')
         z('form_client_save', that.editClient)
