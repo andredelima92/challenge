@@ -51,7 +51,7 @@
         <div class="row lancamento screens">
             <div class="col-md-12 hide-screen"  id="vw_clients">
                 <div class="input-group" style="margin-bottom: 30px;">
-                    <input type="text" class="form-control" aria-label="Pesquisa de cliente" placeholder="Nome do cliente ou telefone" id="search_table_input">
+                    <input type="text" class="form-control" aria-label="Pesquisa de cliente" placeholder="Nome do cliente ou telefone" id="search_table_input" autocomplete="off">
                     <div class="input-group-append">
                         <span class="input-group-text text-primary"><i class="fa fa-search" aria-hidden="true"></i></span>
                     </div>
@@ -101,7 +101,7 @@
             </div>
             <div class="col-md-12 hide-screen"  id="vw_vehicles">
                 <div class="input-group" style="margin-bottom: 30px;">
-                    <input type="text" class="form-control" aria-label="Pesquisa de veículos" placeholder="Modelo ou placa" id="search_table_vehicle_input">
+                    <input type="text" class="form-control" aria-label="Pesquisa de veículos" placeholder="Modelo ou placa" id="search_table_vehicle_input" autocomplete="off">
                     <div class="input-group-append">
                         <span class="input-group-text text-primary"><i class="fa fa-search" aria-hidden="true"></i></span>
                     </div>
@@ -131,7 +131,7 @@
                                     <label for="name">
                                         Placa
                                     </label>
-                                    <input type="text" class="form-control" id="form_vehicle_plate" maxlength="255">
+                                    <input type="text" class="form-control" id="form_vehicle_plate" maxlength="7">
                                 </div>
 
                                 <div class="form-group">
@@ -139,7 +139,7 @@
                                     <label for="phone">
                                         Modelo
                                     </label>
-                                    <input type="tel" class="form-control" id="form_vehicle_model" maxlength="11">
+                                    <input type="tel" class="form-control" id="form_vehicle_model" maxlength="255">
                                 </div>
                                 <button type="button" class="btn btn-primary" id="form_vehicle_save">
                                     Salvar
