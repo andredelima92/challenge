@@ -90,4 +90,15 @@ class clientController extends controller {
         
         return true;
     }
+
+    public function reportBestClients () {
+        
+        return sql::select(
+            "SELECT b.name, b.phone, count(a.id_client) as total 
+            FROM traffics a
+            INNER JOIN clients b on a.id_client = b.id_client
+            GROUP BY a.id_client
+            ORDER BY total DESC limit 20"
+        );
+    }
 }

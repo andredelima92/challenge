@@ -37,9 +37,9 @@
                             <li class="nav-item dropdown">
                                  <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown">Relatórios</a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                     <a class="dropdown-item" href="#">Action</a> <a class="dropdown-item" href="#">Another action</a> <a class="dropdown-item" href="#">Something else here</a>
+                                     <a class="dropdown-item" href="#reportBestClients" id="reportBestClients">Melhores Clientes</a>
                                     <div class="dropdown-divider">
-                                    </div> <a class="dropdown-item" href="#">Separated link</a>
+                                    </div> <a class="dropdown-item" href="#reportTraffics" id="reportTraffics">Estacionamento</a>
                                 </div>
                             </li>
                         </ul>
@@ -49,6 +49,32 @@
         </div>
         
         <div class="row lancamento screens">
+
+            <div class="col-md-12 hide-screen"  id="vw_report_clients">
+                <h2>Os 20 clientes que mais utilizaram o serviço</h2>
+                <div class="row">
+                    <div class="table">
+                        <table class="table table-hover table-striped table-light">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>
+                                        NOME
+                                    </th>
+                                    <th>
+                                        TELEFONE
+                                    </th>
+                                    <th>
+                                        QUANTIDADE
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_report_clients"></tbody>
+                        </table>
+                        <span class="total-text">Total de clientes: <span class="total" id="totalSpanReportClients"></span></span>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-12 hide-screen" id="vw_config">
                 <div class="col-sm-6">
                     <form role="form overflow-auto force-overflow" autocomplete="off">

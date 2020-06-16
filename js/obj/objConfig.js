@@ -33,7 +33,7 @@ const objConfig = function() {
     that.hide = () => {
         const headers = [{header: 'header_parking', view: 'vw_traffics'}
         , {header:'header_vehicles', view: 'vw_vehicles'}, {header:'header_config', view: 'vw_clients'},
-         {header:'header_clients', view: 'vw_config'}]
+         {header:'header_clients', view: 'vw_config'}, {header: 'reportBestClients',view: 'vw_report_clients'}]
 
         headers.forEach(el => {
             z(el.header).parentNode.classList.remove('active')
@@ -87,6 +87,10 @@ const objConfig = function() {
 
         if (screen === 'config')  {
             that.hide().view('vw_config').header('header_config')
+        }
+
+        if (screen === 'reportClients') {
+            that.hide().view('vw_report_clients');
         }
 
         config.cache.clear()
