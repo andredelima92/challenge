@@ -87,7 +87,7 @@ class clientController extends controller {
             lib::$return['err'] = 'Ocorreu um erro ao inserir o cliente';
             return false;
         }
-        
+        lib::$return['newClient'] = true;
         return true;
     }
 

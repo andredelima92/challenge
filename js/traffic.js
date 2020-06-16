@@ -167,7 +167,9 @@ const traffic = () => {
                     phone: data.client.phone
                 }
                 clientView.updateLocalObject(client)
-                clientView.append(client, 'table_clients')
+                if (response.newClient) {
+                    clientView.append(client, 'table_clients')
+                }
             }
 
             if (response.vehicle) {
@@ -177,7 +179,9 @@ const traffic = () => {
                     model: data.vehicle.model
                 }
                 vehicleView.updateLocalObject(vehicle)
-                vehicleView.append(vehicle, 'table_vehicles')
+                if (response.newVehicle) {
+                    vehicleView.append(vehicle, 'table_vehicles')
+                }
             }
 
             if (response.status === false) {

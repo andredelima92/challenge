@@ -67,7 +67,7 @@ class traffic {
             lib::$return['err'] = 'Vaga de estacionamento inexistente';
             return false;
         }
-
+        
         $free = $this->traffic->spotIsFree($this->traffic->parking_space);
 
         if ($free === false) {
@@ -86,13 +86,13 @@ class traffic {
         if ($client->insertOrUpdate() === false) {
             return false;
         }        
-
+        
         lib::$return['client'] = $client->getId();
 
         if ($vehicle->insertOrUpdate() === false) {
             return false;
         }
-
+        
         lib::$return['vehicle'] = $vehicle->getId();
 
         $this->traffic->setClient($client->getId());
@@ -117,12 +117,12 @@ class traffic {
         $data = lib::$data->data->config;
 
         if (!$data->parking_space || !$data->hour_value) {
-            return lib::$return = ['err' => 'Valores informados estão incorretos'];
+            return lib::$return['err'] = 'Valores informados estão incorretos';
         }
 
         $config = new configController($data);
         if ($config->update() === true) {
-            return lib::$return = ['status' => true];
+            return lib::$return['status']  = true;
         }
     }
 }
