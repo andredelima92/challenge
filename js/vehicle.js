@@ -34,6 +34,12 @@ const vehicle = () => {
      */
     that.append = (vehicle, id) => {
         const table = z(id)
+        const old = document.querySelector(`#${id} tr[id_vehicle="${config.cache.id_vehicle}"]`)
+        
+        if (old) {
+            old.remove()
+        }
+
         const tr = document.createElement('tr')
         tr.setAttribute('id_vehicle', vehicle.id_vehicle)
         
@@ -58,6 +64,7 @@ const vehicle = () => {
         
         if (!that.vehicles[vehicle.id_vehicle]) {
             that.vehicles[vehicle.id_vehicle] = new objVehicle(vehicle)
+
             return that.append(that.vehicles[vehicle.id_vehicle], 'form_search_vehicle_body')
         }
         
@@ -190,10 +197,21 @@ const vehicle = () => {
                 return bootbox.alert(response.err)
             }
             
+            
             const tr = document.querySelector(`#table_vehicles tr[id_vehicle="${config.cache.id_vehicle}"]`)
-            tr.childNodes[0].textContent = that.vehicles[config.cache.id_vehicle].license_plate
-            tr.childNodes[1].textContent = that.vehicles[config.cache.id_vehicle].model
+            tr.childNodes[0].textContent = vehicleView.vehicles[config.cache.id_vehicle].license_plate
+            tr.childNodes[1].textContent = vehicleView.vehicles[config.cache.id_vehicle].model
             that.append(that.vehicles[config.cache.id_vehicle], 'form_search_vehicle_body')
+            
+            const traffic = trafficView.traffics.find(el => {
+                if(!el) return
+                return el.license_plate === that.vehicles[config.cache.id_vehicle].license_plate
+            })
+            
+            if (traffic) {
+                traffic.model = z('form_vehicle_model').value.trim()
+                trafficView.updateTrafficLine(traffic)
+            }
             
             bootbox.alert('Veículo atualizado com sucesso!')
         })

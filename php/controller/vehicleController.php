@@ -31,7 +31,7 @@ class vehicleController extends controller {
     public function validPlate($plate)
     {
         if (empty($plate) || strlen($plate) != 7) {
-            lib::$return = ['status' => false, 'err' => 'Placa do veículo inválida'];
+            lib::$return['err'] = 'Placa do veículo inválida';
             
             return false;
         }
@@ -54,7 +54,6 @@ class vehicleController extends controller {
         }
         
         if ($result === false) {
-            lib::$return['status'] = false;
             lib::$return['err'] = 'Ocorreu um erro ao atualizar o veículo';
 
             return false;
@@ -89,7 +88,7 @@ class vehicleController extends controller {
             
             return true;
         }
-        
+        lib::$return['newVehicle'] = true;
         return true;
     }
 }
