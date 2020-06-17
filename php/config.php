@@ -6,7 +6,7 @@ class config {
 	 */
 	private $server = '127.0.0.1';
 	private $user =  'root';
-	private $password = '1845821';
+	private $password = '123456789';
 	private $database = 'parking';
 	public $dbType = 'mysql';
 
