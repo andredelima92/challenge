@@ -45,6 +45,12 @@ const client = () => {
      */
     that.append = (client, id) => {
         const table = z(id)
+        const old = document.querySelector(`#${id} tr[id_client="${config.cache.id_client}"]`)
+        
+        if (old) {
+            old.remove()
+        }
+
         const tr = document.createElement('tr')
         tr.setAttribute('id_client', client.id_client)
         
@@ -192,6 +198,7 @@ const client = () => {
             const tr = document.querySelector(`#table_clients tr[id_client="${config.cache.id_client}"]`)
             tr.childNodes[0].textContent = that.clients[config.cache.id_client].name
             tr.childNodes[1].textContent = that.clients[config.cache.id_client].phone
+            that.append(that.clients[config.cache.id_client], 'form_search_body')
             that.append(that.clients[config.cache.id_client], 'form_search_body')
 
             bootbox.alert('Cliente atualizado com sucesso!')

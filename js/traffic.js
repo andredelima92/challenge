@@ -167,9 +167,8 @@ const traffic = () => {
                     phone: data.client.phone
                 }
                 clientView.updateLocalObject(client)
-                if (response.newClient) {
-                    clientView.append(client, 'table_clients')
-                }
+                clientView.append(client, 'table_clients')
+                clientView.append(client, 'form_search_body')
             }
 
             if (response.vehicle) {
@@ -178,10 +177,10 @@ const traffic = () => {
                     license_plate: data.vehicle.license_plate,
                     model: data.vehicle.model
                 }
+
                 vehicleView.updateLocalObject(vehicle)
-                if (response.newVehicle) {
-                    vehicleView.append(vehicle, 'table_vehicles')
-                }
+                vehicleView.append(vehicle, 'table_vehicles')
+                vehicleView.append(vehicle, 'form_search_vehicle_body')
             }
 
             if (response.status === false) {
@@ -446,6 +445,7 @@ const traffic = () => {
     }
 
     that.headerTraffics = () => {
+        z('totalSpanReportTraffics').textContent = ''
         config.show()
     }
 
@@ -460,7 +460,7 @@ const traffic = () => {
         }
 
         const table = z('table_report_traffics')
-        z('totalSpanReportTraffics').textContent = ''
+        
         table.innerHTML = '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>'
         let html = ''
         let total = 0
@@ -480,7 +480,7 @@ const traffic = () => {
                         </tr>`
             })
             table.innerHTML = html
-            z('totalSpanReportTraffics').textContent = `R$${total}`
+            z('totalSpanReportTraffics').textContent = `R$${total.toFixed(2)}`
         })
     }
 

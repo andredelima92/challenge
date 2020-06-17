@@ -107,6 +107,12 @@ const objConfig = function() {
 
         config.cache.clear()
     }
+
+    that.udapteFormForSearch = (form) => {
+        if (form === 'vehicle')  {
+            
+        }
+    }
     
     that.enableForm = () => {
         return {
